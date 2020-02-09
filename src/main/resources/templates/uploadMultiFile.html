@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files</title>
+</head>
+
+<body>
+<h3>Upload Files:</h3>
+<input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+
+<form th:object="${form}" method="POST"
+      action="" enctype="multipart/form-data">
+
+    File to upload (path): <input th:field="*{fileDatas}" type="file" multiple/><br />
+
+    <input type="submit" value="Upload">
+</form>
+
+
+
+</body>
+</html>
