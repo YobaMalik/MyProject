@@ -1,15 +1,17 @@
 package com.example.demo.PaspAddDoc;
 
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import static org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT;
 
 public class SvOmont {
@@ -17,27 +19,26 @@ public class SvOmont {
     private String katGOST;
     private String desingPress;
     private String desingTemp;
-    private String DWGlist;
+    private String dwgList;
     private String fluidCode;
-    private String weldinfo;
+    private String weldInfo;
     private String NameTit;
     private String heatTreatment;
     private List<String> linelist=new ArrayList<>();
-   private int count=59;
-   private int i=0;
+    private int count=59;
+    private int i=0;
    
    public void setNameTit(String NameTit) {
    	this.NameTit=NameTit;
-   	//System.out.println(NameTit);
    }
-    public void setheatTreatment(String heatTreatment) {
+    public void setHeatTreatment(String heatTreatment) {
         this.heatTreatment=heatTreatment;
     }
 
-    public void setWeldIfno(String wldinfo) {
-    	this.weldinfo=wldinfo;
+    public void setWeldIfno(String wldInfo) {
+    	this.weldInfo=wldInfo;
     }
-    public void setdesingTemp(String desingTemp){
+    public void setDesingTemp(String desingTemp){
         this.desingTemp=desingTemp;
     }
     public void setDesingPress(String desingPress){
@@ -52,8 +53,8 @@ public class SvOmont {
     public void setFluidCode(String fluidCode){
         this.fluidCode=fluidCode;
     }
-    public void setDWGlist(String DWGlist){
-        this.DWGlist=rewriteDWGlist(DWGlist);
+    public void setDWGlist(String dwgList){
+        this.dwgList=rewriteDWGlist(dwgList);
     }
     public void setLinelist(List<String> pipeline){
         this.linelist.addAll(pipeline);
@@ -80,22 +81,18 @@ public class SvOmont {
 
 
 
-    public void createSOM(String filepath,String filename, ConcurrentHashMap<String, ByteArrayOutputStream> SOMList) throws IOException {
-        FileInputStream fil=null;
-        ByteArrayOutputStream outStr=null;
-        try{
+    public void createSOM(String filepath, Map<String, ByteArrayOutputStream> somList) throws IOException {
+
+        try(FileInputStream fil=new FileInputStream(filepath);
+            ByteArrayOutputStream outStr=new ByteArrayOutputStream();
+            Workbook somWorkbook=new XSSFWorkbook(fil)){
             String SVMname="Свидетельство о монтаже №"+ this.NameTit+".xlsx";
-            fil=new FileInputStream(filepath);
-            //bufStrm=new BufferedInputStream(fil);
-            outStr=new ByteArrayOutputStream();
-           // bufOutStrm=new BufferedOutputStream(outStr);
-            XSSFWorkbook somWorkbook=new XSSFWorkbook(fil);
-            XSSFSheet iSheet=somWorkbook.getSheet("Лист1");
-           
-            XSSFFont font=somWorkbook.createFont();
-            font.setFontHeight(10);
+            Sheet iSheet=somWorkbook.getSheet("Лист1");
+            Font font=somWorkbook.createFont();
+            short fontHeight=200;
+            font.setFontHeight(fontHeight);
             font.setFontName("Times New Roman");
-            XSSFCellStyle myStyle=somWorkbook.createCellStyle();
+            CellStyle myStyle=somWorkbook.createCellStyle();
             myStyle.setFont(font);
             myStyle.setAlignment(LEFT);
             /*
@@ -121,7 +118,7 @@ public class SvOmont {
 
 
 
-          iSheet.getRow(28).getCell(0).setCellValue(this.DWGlist);
+          iSheet.getRow(28).getCell(0).setCellValue(this.dwgList);
           //DWG
 
           iSheet.getRow(44).getCell(0).setCellValue(this.heatTreatment);
@@ -133,7 +130,7 @@ public class SvOmont {
           iSheet.getRow(2).getCell(0).setCellValue("СВИДЕТЕЛЬСТВО № "+this.NameTit);
           // Number from titul
          
-          iSheet.getRow(34).getCell(10).setCellValue(this.weldinfo);
+          iSheet.getRow(34).getCell(10).setCellValue(this.weldInfo);
           // welding
 
 
@@ -160,7 +157,7 @@ public class SvOmont {
          pipeline section
           */
 
-         iSheet.getRow(34).getCell(10).setCellValue(this.weldinfo);
+         iSheet.getRow(34).getCell(10).setCellValue(this.weldInfo);
          //welding (gtaw, etc....)
          
          iSheet.createRow(count+1).createCell(0).setCellValue("От изготовителя:"+"\n"+"Менеджер ООО «ЗапСибНефтехим»");
@@ -183,30 +180,16 @@ public class SvOmont {
           */
 
 
-            outStr=new ByteArrayOutputStream();
-            somWorkbook.write(outStr);
-       /*  int count=0;
-         byte[] bts=new byte[8192];
-         while((count=fil.read(bts))!=-1){
-             outStr.write(bts,0,count);
-         }*/
-            fil.close();
-         if(!SOMList.containsKey(SVMname)){
-             SOMList.put(SVMname,outStr);
-         }
-         somWorkbook.close();
 
-            outStr.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            somWorkbook.write(outStr);
+            fil.close();
+         if(!somList.containsKey(SVMname)){
+             somList.put(SVMname,outStr);
+         }
         }
-        finally {
-            if (fil!=null){
-                fil.close();
-            }
         }
 
     }
 
-}
+
 

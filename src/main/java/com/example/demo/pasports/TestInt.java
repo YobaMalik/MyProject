@@ -1,6 +1,8 @@
 package com.example.demo.pasports;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,7 +16,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public interface TestInt{
-	 public default boolean checkmun(String str){
+	  default boolean checkmun(String str){
 		 /*
 	        if (str==null) return false;
 	        return str.matches("^-?\\d+$");*/
@@ -25,7 +27,7 @@ public interface TestInt{
 		        return false;
 		    }
 	    }
-	 public default boolean checkfnip(XSSFWorkbook excPasp, XSSFSheet iSheet) {
+	  default boolean checkfnip(Workbook excPasp, Sheet iSheet) {
 
 	        //boolean b = false;
 	        if (excPasp.getNumberOfSheets() < 10) {
@@ -35,7 +37,7 @@ public interface TestInt{
 	        return false;
 	    }
 	 
-	 public default String calcCategory(String TPTCcode, double operPress, double designtTemp, double maxdn) {
+	  default String calcCategory(String TPTCcode, double operPress, double designtTemp, double maxdn) {
 		 int  paspCat=0;
 		 String dApp=null;
 		 if (TPTCcode.toLowerCase().equals("г1")) {
@@ -124,7 +126,7 @@ public interface TestInt{
 		 }else		 
 		 return Integer.toString(paspCat);
 	 }
-	 public default void calculateTPTC(String filePath, String eList, int rowN, int TPTRcol, int opCol, int dtCol, int MDCol) throws ParseException {
+	  default void calculateTPTC(String filePath, String eList, int rowN, int TPTRcol, int opCol, int dtCol, int MDCol) throws ParseException {
 		 try {
 		 XSSFWorkbook testwb=new XSSFWorkbook(new FileInputStream(new File(filePath)));
 	     XSSFSheet shit=testwb.getSheet(eList);
@@ -138,7 +140,7 @@ public interface TestInt{
 	     }
 	    int firstrow=shit.getRow(rowN).getFirstCellNum();
 	     for (int i=firstrow;i<shit.getRow(rowN).getLastCellNum();i++) {
-	    	 try {
+
 	    		 if (shit.getRow(i)!=null&& shit.getRow(i).getCell(TPTRcol)!=null &&shit.getRow(i).getCell(opCol)!=null&& shit.getRow(i).getCell(dtCol)!=null
 	    				 && shit.getRow(i).getCell(MDCol)!=null) {
 	     	String TPTCcode=shit.getRow(i).getCell(TPTRcol).toString();
@@ -148,15 +150,8 @@ public interface TestInt{
 	     	String cat=this.calcCategory(TPTCcode, d, designtTemp, maxdn);
 	     	shit.getRow(i).createCell(60).setCellValue(cat);
 	    		 }
-	     	}
-	     catch (NumberFormatException e) {
-	    	 System.out.println(i+" строка " );
-	    	 e.printStackTrace();		
-	    	
-	     	}
-	     	catch (NullPointerException e) {
-	     		e.printStackTrace();		
-	     	}    
+
+
 	     }
 	    testwb.write(new FileOutputStream(new File(filePath+".xlsx")));
 	    testwb.close();
@@ -166,11 +161,10 @@ public interface TestInt{
 			 
 		 } 
 	 }
-	 public default Number parseNumb(String numb) throws ParseException {
+	 default Number parseNumb(String numb) throws ParseException {
 		 NumberFormat format=NumberFormat.getInstance(Locale.FRANCE);
 		 Number number=format.parse(numb);
 		return number;
-		 
 	 }
 	 
 }

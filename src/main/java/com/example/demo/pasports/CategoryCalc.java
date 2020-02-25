@@ -51,7 +51,9 @@ public class CategoryCalc implements TestInt{
     private String billP;
     private String numbOS;
     private String groupTPTC;
-    public List<String> getPipeline(){return this.Pipeline;}
+    public List<String> getPipeline(){
+        return this.Pipeline;
+    }
     public String getaFile(){return this.aFile;}
     public String getgroupTPTC() {
         return this.groupTPTC;
@@ -142,13 +144,9 @@ public class CategoryCalc implements TestInt{
     public String getmintemp() {
         return this.minTemp;
     }
-    public void getNameTitul(XSSFWorkbook excPasp)  {
-      /*  int cIndex = 0;
-        int tempIndexu=0;
-        int tempIndexd=0;
-        CellRangeAddress tempPress = null;
-*/
-            XSSFSheet iSheet = null;
+    public void getNameTitul(Workbook excPasp)  {
+
+            Sheet iSheet = null;
             //FormulaEvaluator evaluator1 = excPasp.getCreationHelper().createFormulaEvaluator();
 
             int j;
@@ -180,14 +178,14 @@ public class CategoryCalc implements TestInt{
                 }
             }
     
-    public void getinfopart2(XSSFWorkbook excPasp)  {
+    public void getinfopart2(Workbook excPasp)  {
     	
         int cIndex = 0;
         int tempIndexu=0;
         int tempIndexd=0;
         CellRangeAddress tempPress = null;
 
-            XSSFSheet iSheet = null;
+            Sheet iSheet = null;
             FormulaEvaluator evaluator1 = excPasp.getCreationHelper().createFormulaEvaluator();
 
             int j;
@@ -301,7 +299,7 @@ public class CategoryCalc implements TestInt{
                         if (adString.contains("коррозии")) {
                             CellValue corRate = evaluator1.evaluate(iSheet.getRow(mergRow).getCell(cIndex));
                             if (corRate!=null) {
-                                if ( !(corRate.getStringValue() instanceof String)) {
+                                if  (corRate.getStringValue()!=null) {
                                     this.Corrosionrate = Double.toString(corRate.getNumberValue());
                                 } else {
                                     this.Corrosionrate = corRate.getStringValue();
@@ -345,8 +343,9 @@ public class CategoryCalc implements TestInt{
             }
 
     }
-    //int check, XSSFSheet newshit,
-    public void calc(XSSFWorkbook excPasp, String aFile, ConcurrentLinkedQueue<RowfTable<String>> allTable)  {
+
+    public void calc(Workbook excPasp, String aFile, Queue<RowfTable<String>> allTable)  {
+   //     System.out.println(this.diams+" "+ this.linesANDzone +" "+ this.lastcell +" "+ this.lastLAZcell);
         this.aFile=aFile;
     	this.getinfopart4(excPasp);
     	this.getDWG(excPasp);
@@ -354,7 +353,7 @@ public class CategoryCalc implements TestInt{
     	this.getinfopart6(excPasp);
 
         int tempIndex = 0;
-            XSSFSheet iSheet = null;
+            Sheet iSheet = null;
   
             FormulaEvaluator evaluator1 = excPasp.getCreationHelper().createFormulaEvaluator();
             for(int i = 0; i < excPasp.getNumberOfSheets(); ++i) {	
@@ -368,9 +367,9 @@ public class CategoryCalc implements TestInt{
             if (!this.checkfnip(excPasp, iSheet) && iSheet != null) { 
                 HashMap<String, String> part51 =new HashMap<>();
                 
-               // part51=this.getPipeInfo(excPasp);
+                part51=this.getPipeInfo(excPasp);
            
-          //      this.getMAXdn(part51,excPasp);
+                this.getMAXdn(part51,excPasp);
                
                // int adINT = 0;
 
@@ -503,8 +502,8 @@ public class CategoryCalc implements TestInt{
                                 singleRow.addValue(20,this.getDesignTemp());
                                 singleRow.addValue(21,"");
                                 singleRow.addValue(22,"");
-                               // singleRow.addValue(21,this.getDWGs());
-                                //singleRow.addValue(22,this.getweldInfo());
+                                singleRow.addValue(21,this.getDWGs());
+                                singleRow.addValue(22,this.getweldInfo());
                                 singleRow.addValue(23, this.getTestPressHydro());
                                 singleRow.addValue(24, this.getTestPressPnevmo());
                                // singleRow.addValue(25, this.getleaktest());
@@ -559,10 +558,10 @@ public class CategoryCalc implements TestInt{
         }
 
 
-    public HashMap<String, String>  getPipeInfo(XSSFWorkbook excPasp)  {
+    public HashMap<String, String>  getPipeInfo(Workbook excPasp)  {
     	HashMap<String, String> pipeadnmaterial=new HashMap<> ();
 
-            XSSFSheet iSheet = null;
+    	Sheet iSheet = null;
 
         
             for(int diam = 0; diam < excPasp.getNumberOfSheets(); ++diam) {
@@ -608,7 +607,7 @@ public class CategoryCalc implements TestInt{
        return pipeadnmaterial;            
     }
 
-    public void getMAXdn(HashMap<String,String> getPipeInfo, XSSFWorkbook wbk) {
+    public void getMAXdn(HashMap<String,String> getPipeInfo, Workbook wbk) {
        
         double maxDN = 0;
         HashMap<String,String> pipesize=new HashMap<>();
@@ -625,7 +624,7 @@ public class CategoryCalc implements TestInt{
             }  
             
         }
-        XSSFSheet iSheet = null;
+        Sheet iSheet = null;
         int iDN = -1;
         int firstcell = -1;
 
@@ -660,13 +659,9 @@ public class CategoryCalc implements TestInt{
                         str = str.replaceAll("/", "x");
                         str = str.replaceAll("-", "x");
                         String[] diams = str.split("x");
-                       
-                        for (int j=0;j<diams.length;j++){  
-                        	
+                        for (int j=0;j<diams.length;j++){
                             if (checkmun(diams[j]) && Double.parseDouble(diams[j]) > maxDN) {
-                            	 
                                 maxDN = Double.parseDouble(diams[j]);
-                                
                             }
                         }
                     
@@ -684,8 +679,8 @@ public class CategoryCalc implements TestInt{
 
     }
     */
-    public void getinfopart4(XSSFWorkbook excPasp) {
-    	 XSSFSheet iSheet = null;
+    public void getinfopart4(Workbook excPasp) {
+    	 Sheet iSheet = null;
     	 int cIndex = 0;
 
              //FormulaEvaluator evaluator1 = excPasp.getCreationHelper().createFormulaEvaluator();
@@ -786,8 +781,8 @@ public class CategoryCalc implements TestInt{
         	 
     }
     
-    public void getDWG(XSSFWorkbook excPasp) {
-   	 XSSFSheet iSheet = null;
+    public void getDWG(Workbook excPasp) {
+   	 Sheet iSheet = null;
    	 int cIndex = 0;
 
             //FormulaEvaluator evaluator1 = excPasp.getCreationHelper().createFormulaEvaluator();
@@ -909,8 +904,8 @@ public class CategoryCalc implements TestInt{
             }
        	 
    }
-    public void getinfopart6(XSSFWorkbook excPasp){
-        XSSFSheet iSheet = null;
+    public void getinfopart6(Workbook excPasp){
+        Sheet iSheet = null;
 
         for(int j = 0; j < excPasp.getNumberOfSheets(); ++j) {
             if (excPasp.getSheetName(j).equals("6")) {

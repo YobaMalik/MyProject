@@ -27,36 +27,5 @@ public class Filesearch {
             }
         }
     }
-
-    void  fserandcru(String fPath, String newP, String zulul, String filename) {
-        //long time = System.currentTimeMillis();
-        ArrayList<String> Filenames = new ArrayList<>();
-        if (filename.length()==0){
-            filename="KAMA_THE_BULLET";
-        }
-        try {
-            findfileszulul(fPath,zulul, Filenames);
-            File listoffiles=new File(newP + "\\" + filename + ".txt");
-            System.out.println(newP);
-            System.out.println(filename);
-            listoffiles.createNewFile();
-            FileWriter wr=new FileWriter(listoffiles);
-            for (String fName : Filenames) {
-                wr.write(fName);
-                wr.append("\r\n");
-
-            }
-            wr.flush();
-            wr.close();
-        }
-        catch(NullPointerException e){
-            System.out.print("Empty");
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-    
-   
 }
 
