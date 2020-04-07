@@ -1,7 +1,6 @@
-package com.example.demo.pasports;
+package com.example.demo.Pasport;
 
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -27,13 +26,11 @@ public interface TestInt{
 		        return false;
 		    }
 	    }
-	  default boolean checkfnip(Workbook excPasp, Sheet iSheet) {
-
+	  default boolean checkfnip(Workbook excPasp) {
 	        //boolean b = false;
 	        if (excPasp.getNumberOfSheets() < 10) {
 	          return true;
 	        }
-
 	        return false;
 	    }
 	 

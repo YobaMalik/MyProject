@@ -1,13 +1,13 @@
 package com.example.demo.OBRE;
-import com.example.demo.pasports.CategoryCalc;
-import com.example.demo.pasports.RowfTable;
-import org.apache.poi.ss.usermodel.Workbook;
-import java.util.Queue;
 
-public class PaspInfo extends CategoryCalc {
-    @Override
-    public void calc(Workbook excPasp, String aFile, Queue<RowfTable<String>> allTable) {
-        super.getinfopart2(excPasp);
-        super.calc(excPasp, aFile, allTable);
+import com.example.demo.Pasport.ExtractPasportData;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class PaspInfo extends ExtractPasportData {
+    public PaspInfo(InputStream excPasp) throws IOException {
+        super(excPasp);
     }
 }

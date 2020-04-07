@@ -1,14 +1,12 @@
 package com.example.demo.OBRE;
 
-import com.example.demo.pasports.RowfTable;
+
+import com.example.demo.Pasport.RowfTable;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +44,6 @@ public class OBREapplication implements GetTableNumber{
         String val=this.GetParagraphText(table.getRow(firstrow).getCell(col));
         for (int i=firstrow; i<lastrow;i++) {
             CTTc mCell=table.getRow(i).getCell(col).getCTTc();
-
             if(i==firstrow) {
                 this.removeObj(mCell);
                 mCell.addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
@@ -62,6 +59,7 @@ public class OBREapplication implements GetTableNumber{
         CTText text=run.addNewT();
         text.setStringValue(val);
     }
+
 public String GetParagraphText(XWPFTableCell cell){
         String sValue = null;
     CTP Paragraph=cell.getCTTc().getPArray(0);
@@ -184,11 +182,12 @@ public String GetParagraphText(XWPFTableCell cell){
         iTable.setInsideHBorder(XWPFBorderType.SINGLE, 1, 0, "000000");
         iTable.setInsideVBorder(XWPFBorderType.SINGLE, 1, 0, "000000");
     }
+
     public void FillTable(XWPFDocument wDoc, Queue<RowfTable<String>> lineinfo) {
             int count=1;
             List<RowfTable<String>> sortrow=Lists.newArrayList(lineinfo.iterator());
             if (this.table3Part==null) {
-                this.table3Part = this.gettableIter(wDoc, 3);
+                this.table3Part = this.getTableIter(wDoc, 3);
             }
             XWPFTableRow row= this.table3Part.createRow();
             row.createCell();
@@ -238,7 +237,7 @@ public String GetParagraphText(XWPFTableCell cell){
 
 
         if(this.zTable==null) {
-            XWPFTable part2Table=this.gettableIter(wDoc, 2);
+            XWPFTable part2Table=this.getTableIter(wDoc, 2);
             this.zTable = part2Table;
         }
             XWPFTable newTestTable=wDoc.createTable();
@@ -247,8 +246,8 @@ public String GetParagraphText(XWPFTableCell cell){
             this.fTablle2(newTestTable,sortrow.get(0));
 
         int[] cols= {1,0,2,3,4,5};
-        this.MrgClTbl(this.gettableIter(wDoc, 3),this.firstRow,cols);
-        this.firstRow=this.gettableIter(wDoc, 3).getRows().size()+1;
+        this.MrgClTbl(this.getTableIter(wDoc, 3),this.firstRow,cols);
+        this.firstRow=this.getTableIter(wDoc, 3).getRows().size()+1;
         this.createBorder(this.table3Part);
     }
     public void DeleteTabpe(XWPFDocument wDoc){
@@ -285,12 +284,11 @@ public String GetParagraphText(XWPFTableCell cell){
                             cursor.toNextToken();
                         }
                     }
-                    //newly created cell has one default paragraph we need to remove
                     targetCell.removeParagraph(targetCell.getParagraphs().size() - 1);
                 }
             }
         }
-        //newly created table has one row by default. we need to remove the default row.
+
         target.removeRow(0);
     }
 
@@ -301,9 +299,7 @@ public String GetParagraphText(XWPFTableCell cell){
         for (int i=0; i<source.getRuns().size(); i++ ) {
             XWPFRun run = source.getRuns().get(i);
             XWPFRun targetRun = target.createRun();
-            //copy formatting
             targetRun.getCTR().setRPr(run.getCTR().getRPr());
-            //no images just copy text
             targetRun.setText(run.getText(0));
         }
     }

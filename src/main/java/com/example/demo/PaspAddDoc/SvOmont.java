@@ -24,7 +24,7 @@ public class SvOmont {
     private String weldInfo;
     private String NameTit;
     private String heatTreatment;
-    private List<String> linelist=new ArrayList<>();
+    private List<String> lineList=new ArrayList<>();
     private int count=59;
     private int i=0;
    
@@ -57,7 +57,7 @@ public class SvOmont {
         this.dwgList=rewriteDWGlist(dwgList);
     }
     public void setLinelist(List<String> pipeline){
-        this.linelist.addAll(pipeline);
+        this.lineList.addAll(pipeline);
     }
 
     private String rewriteDWGlist (String DWGlist){
@@ -136,9 +136,9 @@ public class SvOmont {
 
          StringBuilder allLine=new StringBuilder();
          iSheet.createRow(58);
-         this.linelist.forEach( e->{
+         this.lineList.forEach( e->{
              allLine.append(e.replaceAll("\n", ""));
-             if (this.i!=this.linelist.size()) {
+             if (this.i!=this.lineList.size()) {
                  if (this.i >= 2 && this.i % 2 == 0) {
                      allLine.append(";" + "\n");
                  } else {
@@ -160,11 +160,11 @@ public class SvOmont {
          iSheet.getRow(34).getCell(10).setCellValue(this.weldInfo);
          //welding (gtaw, etc....)
          
-         iSheet.createRow(count+1).createCell(0).setCellValue("От изготовителя:"+"\n"+"Менеджер ООО «ЗапСибНефтехим»");
+         iSheet.createRow(count+1).createCell(0).setCellValue("От изготовителя:"+"\n"+"Менеджер ");
          iSheet.getRow(count+1).getCell(0).setCellStyle(myStyle);
          iSheet.addMergedRegion(new CellRangeAddress(count+1,count+1,0,17));
          
-         iSheet.createRow(count+2).createCell(0).setCellValue("_________________ /  Тайшева Елена Валерьевна ____________________________________«05» августа 2019 г");
+         iSheet.createRow(count+2).createCell(0).setCellValue("_________________ /  Иванов Иван Иванович ____________________________________«11» декабря 1111 г");
          iSheet.getRow(count+2).getCell(0).setCellStyle(myStyle);
          iSheet.addMergedRegion(new CellRangeAddress(count+2,count+2,0,17));
          

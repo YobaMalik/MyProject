@@ -1,46 +1,40 @@
 package com.example.demo.PaspAddDoc;
-import com.example.demo.pasports.NewTable;
-import com.example.demo.pasports.RowfTable;
+import com.example.demo.Interface.ResultDocs;
+import com.example.demo.Pasport.RowfTable;
+import org.springframework.stereotype.Service;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GetInfoFSVOM  implements NewTableDoc {
-
+@Service
+public class GetInfoFSVOM  implements ResultDocs {
+    ExecutorService newTask ;
     @Override
-    public double CreateTable(Map<String, ByteArrayOutputStream> FileInput, Map<String, ByteArrayOutputStream> SOMlist) throws IOException {
-        long startTime = System.currentTimeMillis();
-        this.createSOM(FileInput,SOMlist);
-        System.out.println((double) System.currentTimeMillis() / 60000 - (double) startTime / 60000);
-        return (double) System.currentTimeMillis() / 60000 - (double) startTime / 60000;
+    public void createDocs(Map<String, ByteArrayOutputStream> FileInput, Map<String, ByteArrayOutputStream> resultList,ExecutorService newTask) throws IOException {
+        this.newTask=newTask;
+        this.createSOM(FileInput,resultList);
     }
 
-    private void createSOM(Map<String, ByteArrayOutputStream> FileInput, Map<String, ByteArrayOutputStream> SOMList) throws IOException {
+    private void createSOM(Map<String, ByteArrayOutputStream> FileInput, Map<String, ByteArrayOutputStream> somList) throws IOException {
        Queue<RowfTable<String>> allTable1 = new ConcurrentLinkedQueue<>();
         List<ThreadClass> taskList = new ArrayList<>();
         for (Map.Entry<String, ByteArrayOutputStream> entry : FileInput.entrySet()) {
             InputStream in = new ByteArrayInputStream(entry.getValue().toByteArray());
-            taskList.add(new ThreadClass(entry.getKey(), in, allTable1,SOMList));
+            taskList.add(new ThreadClass(entry.getKey(), in, allTable1,somList));
             in.close();
         }
 
-        ExecutorService newTask = Executors.newFixedThreadPool(8);
         try {
             newTask.invokeAll(taskList);
-            newTask.shutdown();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            newTask.shutdown();
         }
     }
-
-
 }
 

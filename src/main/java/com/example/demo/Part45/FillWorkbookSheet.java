@@ -1,6 +1,7 @@
 package com.example.demo.Part45;
 
 
+import com.example.demo.Interface.Rows;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public interface FillWorkbookSheet {
         return rejThick;
     }
 
-    default void FillSheet(Sheet iSheet, List<NewRow<String>> resultList, String[] head, CellStyle style) throws FileNotFoundException, IOException {
+    default void FillSheet(Sheet iSheet, List<Rows<String>> resultList, String[] head, CellStyle style) throws FileNotFoundException, IOException {
 
         int cellIndex=iSheet.getSheetName().compareTo("отводы")==0||iSheet.getSheetName().compareTo("трубы")==0?9:11;
         int lastFilledCell=Integer.parseInt(head[head.length-1]);
@@ -67,8 +68,8 @@ public interface FillWorkbookSheet {
                 row.createCell(j).setCellValue(resultList.get(i).getValue(j));
 
             }
-            String outDiam=resultList.get(i).getValue(2);
-            if (outDiam.toLowerCase().replace("х","x").contains("x")) {
+            String outDiam=resultList.get(i).getValue(2).replace("х","x");
+            if (outDiam.toLowerCase().contains("x")) {
                 List<String> splitList=this.GetDiamAndThik(outDiam);
 
                 for (int j=0;j<splitList.size();j++) {

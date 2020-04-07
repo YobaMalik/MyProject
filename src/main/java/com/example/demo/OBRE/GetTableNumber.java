@@ -9,12 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface GetTableNumber {
-     default XWPFTable gettableIter(XWPFDocument testdoc, int part)  {
+     default XWPFTable getTableIter(XWPFDocument testdoc, int part)  {
         XWPFTable sTable = null;
+
         //int desingpressure=0;
         Iterator<XWPFTable> iter = testdoc.getTablesIterator();
         while (iter.hasNext()) {
             XWPFTable newtable = iter.next();
+
             //find desing pressure and pipesize
             List<XWPFTableRow> rowiter = newtable.getRows();
             for (int i = 0; i < rowiter.size(); i++) {

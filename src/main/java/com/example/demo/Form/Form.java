@@ -1,4 +1,6 @@
 package com.example.demo.Form;
+import com.example.demo.Interface.ResultDocs;
+import com.example.demo.PaspAddDoc.GetInfoFSVOM;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Form {

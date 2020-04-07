@@ -1,27 +1,34 @@
-package com.example.demo.pasports;
+package com.example.demo.Pasport;
 
+
+import com.example.demo.Interface.ResultDocs;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.text.ParseException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 @Service
-public class GetInfoPasp implements NewTable {
+public class GetInfoPasp implements ResultDocs {
+
+
     private  Queue<RowfTable<String>> allTable1=new ConcurrentLinkedQueue<>();
-    ExecutorService pool = Executors.newFixedThreadPool(8);
+    private  List<RowfTable<String>> resList=new ArrayList<>();
+    private String tString="zulul";
+    ExecutorService pool;
 
-
-    private void createTable(Map<String, ByteArrayOutputStream> fileInput) throws IOException {
+    private void getTable(Map<String, ByteArrayOutputStream> fileInput, Map<String, ByteArrayOutputStream> resultList) throws IOException {
         Workbook book = new XSSFWorkbook();
         Sheet sheet = book.createSheet("Result");
         Row row = sheet.createRow(0);
@@ -32,30 +39,27 @@ public class GetInfoPasp implements NewTable {
             row.createCell(i).setCellValue(head[i]);
         }
 
-        List<String> list = new ArrayList<>();
-     //  String filePath="/home/yoba/Рабочий стол/testResult/testres.xlsx";
-        String filePath="C:\\Users\\Yoba\\Desktop\\свидетельства\\testres.xlsx";
-        try( FileOutputStream outputStream =  new FileOutputStream(filePath)) {
+        try( ByteArrayOutputStream outputStream =  new ByteArrayOutputStream()) {
             List<Callable<Void>> tasks = new ArrayList<>();
             for(Map.Entry<String,ByteArrayOutputStream> entry:fileInput.entrySet()){
                 InputStream in = new ByteArrayInputStream(entry.getValue().toByteArray());
                 tasks.add(new MyTask(entry.getKey(),in,  allTable1));
             }
             try {
-                this.pool.invokeAll(tasks);
+                pool.invokeAll(tasks);
             }
             catch (InterruptedException e){
                 e.printStackTrace();
             }
-           List<RowfTable<String>> resultTable=Lists.newArrayList(allTable1.iterator());
-
+           List<RowfTable<String>> resultTable= Lists.newArrayList(allTable1.iterator());
             resultTable.sort((arg0, arg1) -> Integer.compare(arg0.getValue(26).compareTo(arg1.getValue(26)), 0));
 
-            int ij=1;
-            Iterator<RowfTable<String>> iter=resultTable.iterator(); 
+            this.resList=resultTable;
+            int sheetIndexRow=1;
+            Iterator<RowfTable<String>> iter=resultTable.iterator();
             while (iter.hasNext()){
                 RowfTable<String> n1=iter.next();
-                Row newr=sheet.createRow(ij);
+                Row newr=sheet.createRow(sheetIndexRow);
                 for (int i=0;i<n1.getSize();i++){
                     if (!(n1.getValue(i)==null)){
                         newr.createCell(i).setCellValue(n1.getValue(i));
@@ -64,21 +68,26 @@ public class GetInfoPasp implements NewTable {
                         newr.createCell(i).setCellValue("");
                     }
                 }
-                ij++;
+                sheetIndexRow++;
             }
+
             book.write(outputStream);
-            book.close();
+            resultList.put("ResultTable.xlsx",outputStream);
+            this.allTable1.clear();
         }
 
 
     }
 
+
     @Override
-    public double getTable(Map<String,ByteArrayOutputStream> FileInput) throws IOException {
-        long starttime = System.currentTimeMillis();
-        this.createTable(FileInput);
-        System.out.println((double)System.currentTimeMillis() / 60000 - (double)starttime / 60000);
-        return (double)System.currentTimeMillis() / 60000 - (double)starttime / 60000;
+    public void createDocs(Map<String, ByteArrayOutputStream> fileInput, Map<String, ByteArrayOutputStream> resultList,ExecutorService newTask) throws IOException {
+        this.pool=newTask;
+        this.getTable(fileInput,resultList);
+    }
+
+    public   List<RowfTable<String>>  getMap(){
+        return this.resList;
     }
 }
 

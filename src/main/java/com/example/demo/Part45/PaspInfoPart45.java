@@ -1,7 +1,10 @@
 package com.example.demo.Part45;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
+import com.example.demo.Interface.Rows;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,15 +17,14 @@ public class PaspInfoPart45 implements GetInfoPart2,ConvertString{
 	private int eSteel;
 	private int eGost;
 	private int rowIndex;
-	private String paspPart;
+	private String[] paspPart;
 	private Workbook wb;
 	private String fileName;
 	private double desTemp;
 	private double desPress;
 
-	public PaspInfoPart45(Workbook wb,String paspPart,String fileName) {
+	public PaspInfoPart45(Workbook wb,String fileName) {
 		this.wb=wb;
-		this.paspPart=paspPart;
 		this.fileName=fileName;
 		this.desPress=this.getMaxValue(this.GetPressTemp(wb, 0).toString());
 		this.desTemp=this.getMaxValue(this.GetPressTemp(wb, 1).toString());
@@ -38,8 +40,8 @@ public class PaspInfoPart45 implements GetInfoPart2,ConvertString{
 		}
 
 	}
-	private void GetInfoPart51() {
-		Sheet iSheet=this.wb.getSheet(this.paspPart);
+	private void GetInfoPart51(String paspPart) {
+		Sheet iSheet=this.wb.getSheet(paspPart);
 		Iterator<Row> rIter=iSheet.rowIterator();
 		while(rIter.hasNext()) {
 			Iterator<Cell> cIter=rIter.next().cellIterator();
@@ -71,32 +73,32 @@ public class PaspInfoPart45 implements GetInfoPart2,ConvertString{
 		}
 	}
 
-	public void FillTable(List<NewRow<String>> resultList) {
-		this.GetInfoPart51();
-		Sheet sht=this.wb.getSheet(paspPart);
-		int[] mass={this.nameElem,this.eThikness,this.eSteel,this.eGost};
-		for (int i=this.rowIndex+1;i<sht.getLastRowNum()+1;i++) {
-			try {
-				if (sht.getRow(i)!=null &&
-						sht.getRow(i).getCell(this.nameElem)!=null &&
-						sht.getRow(i).getCell(this.nameElem).getCellType()!=CellType.BLANK) {
-					NewRow<String> row=new NewRow<>();
-					row.addValue(0,this.fileName);
-					for(int j=0;j<mass.length;j++) {
-						String str=sht.getRow(i).getCell(mass[j]).toString();
-						row.addValue(str);
+	public void FillTable(List<Rows<String>> resultList,String... paspPart) {
+		this.paspPart=paspPart;
+		for(int z=0;z<this.paspPart.length;z++) {
+			this.GetInfoPart51(this.paspPart[z]);
+			Sheet sht = this.wb.getSheet(this.paspPart[z]);
+			int[] mass = {this.nameElem, this.eThikness, this.eSteel, this.eGost};
+			for (int i = this.rowIndex + 1; i < sht.getLastRowNum() + 1; i++) {
+				try {
+					if (sht.getRow(i) != null &&
+							sht.getRow(i).getCell(this.nameElem) != null &&
+							sht.getRow(i).getCell(this.nameElem).getCellType() != CellType.BLANK) {
+						Rows<String> row = new NewRow<>();
+						row.addValue(0, this.fileName);
+						for (int j = 0; j < mass.length; j++) {
+							String str = sht.getRow(i).getCell(mass[j]).toString();
+							row.addValue(str);
+						}
+						row.addValue(Double.toString(this.desPress).replace(".", ","));
+						row.addValue(Double.toString(this.desTemp).replace(".", ","));
+						resultList.add(row);
 					}
-					row.addValue(Double.toString(this.desPress).replace(".", ","));
-					row.addValue(Double.toString(this.desTemp).replace(".", ","));
-					resultList.add(row);
+				} catch (NullPointerException e) {
+					e.printStackTrace();
 				}
-			}catch(NullPointerException e) {
-				e.printStackTrace();
 			}
+			Arrays.stream(mass).forEach(e->e=0);
 		}
 	}
-
-
-
-
 }

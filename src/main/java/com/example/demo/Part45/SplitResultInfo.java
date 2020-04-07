@@ -1,5 +1,6 @@
 package com.example.demo.Part45;
 
+import com.example.demo.Interface.Rows;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -9,12 +10,12 @@ import java.util.List;
 
 public class SplitResultInfo implements FillWorkbookSheet {
 
-    private HashMap<String, List<NewRow<String>>> taskList = new HashMap<>();
+    private HashMap<String, List<Rows<String>>> taskList = new HashMap<>();
     private Workbook wb = new XSSFWorkbook();
     private CellStyle style;
 
 
-    public SplitResultInfo(Workbook wb, List<NewRow<String>> resultList) {
+    public SplitResultInfo(Workbook wb, List<Rows<String>> resultList) {
         this.wb = wb;
         this.style = wb.createCellStyle();
         this.style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -23,12 +24,12 @@ public class SplitResultInfo implements FillWorkbookSheet {
         this.splitInfo(resultList);
     }
 
-    public void splitInfo(List<NewRow<String>> resultList) {
-        List<NewRow<String>> pipes = new ArrayList<>();
-        List<NewRow<String>> elbows = new ArrayList<>();
-        List<NewRow<String>> tees = new ArrayList<>();
-        List<NewRow<String>> reducers = new ArrayList<>();
-        List<NewRow<String>> blindFl = new ArrayList<>();
+    public void splitInfo(List<Rows<String>> resultList) {
+        List<Rows<String>> pipes = new ArrayList<>();
+        List<Rows<String>> elbows = new ArrayList<>();
+        List<Rows<String>> tees = new ArrayList<>();
+        List<Rows<String>> reducers = new ArrayList<>();
+        List<Rows<String>> blindFl = new ArrayList<>();
 
         resultList.forEach(e -> {
             String elemName = e.getValue(1).toLowerCase();
