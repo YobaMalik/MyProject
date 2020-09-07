@@ -9,11 +9,62 @@
 <body>
 <th:block th:include="/_menu"></th:block>
 
+<script src="/generated/app-bundle.js"></script>
+
 <h3>Spring Boot File Upload Example</h3>
 
 <ul>
     <li><a th:href="@{/uploadMultiFile}">Upload Multiple Files</a></li>
 </ul>
 
+<ul>
+    <li><a th:href="@{/stressCalculation}">Расчет на прочность</a></li>
+</ul>
+
+<form action="#" th:action="@{/testPressureInfo}"  th:object="${PressureInfoTest}" method='POST'>
+    <table>
+        <tr>
+            <td>
+                <p>Допустимое напряжение при 20 градусах цельсия :</p>
+                <input name="amount" type="number" step="any" size="5" th:field="*{sigma20}">
+                <br>
+
+                <p>Допустимое напряжение при рабочей температуре :</p>
+                <input name="amount" type="number" step="any" th:field="*{sigmaT}">
+                <br>
+
+                <p>Давление раб/расч :</p>
+                <input name="amount" type="number" step="any" th:field="*{pressure}">
+                <br>
+
+
+                <select  th:field="*{elementType}" >
+                    <option value="водогрейный котел">водогрейный котел</option>
+                    <option value="паровой котел">паровой котел</option>
+                    <option value="пароперегреватель">пароперегреватель</option>
+                    <option value="электрокотел">электрокотел</option>
+                    <option value="литой">литой</option>
+                    <option value="кованный">кованный</option>
+                    <option value="не металлический сосуд"> не металлический сосуд </option>
+                </select>
+
+                <button type="submit">LUL get this POS</button>
+
+
+
+
+            </td>
+        </tr>
+    </table>
+</form>
+
+<table>
+    <tr><th>текст заголовка</th><th>текст заголовка</th></tr> <!--ряд с ячейками заголовков-->
+    <tr><td>данные</td><td>данные</td></tr> <!--ряд с ячейками тела таблицы-->
+</table>
+
+
 </body>
+
+
 </html>

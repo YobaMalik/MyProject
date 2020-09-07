@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Time</title>
+</head>
+
+<body>
+<th:block th:include="/_menu"></th:block>
+
+<table>
+    <tr>
+        <td>Select Spec:</td>
+        <td>
+            <select th:field="*{spec}">
+                <option value=""> -- </option>
+                <option th:each="key : ${mapList.getVal().keySet()}"
+                        th:value="${key}"
+                        th:utext="${key}">
+                </option>
+            </select>
+
+            <select th:field="*{grade}">
+                <option value=""> -- </option>
+                <option th:each="key : ${mapList.getGradeVal().keySet()}"
+                        th:value="${key}"
+                        th:utext="${key}">
+                </option>
+            </select>
+
+            <input name="amount" type="number" step="any" th:field="*{temp}">
+            <button type="submit">LUL</button>
+        </td>
+    </tr>
+</table>
+</body>
+
+</html>

@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -47,7 +46,7 @@ public class ServerFiles {
     }
 
 
-    public String doUpload(HttpServletRequest request, Model model, Form form, Map<String, ByteArrayOutputStream> fileArray) {
+    public String doUpload( Model model, Form form, Map<String, ByteArrayOutputStream> fileArray) {
         MultipartFile[] fileDatas = form.getFileDatas();
         List<String> uploadedFiles = new ArrayList<>();
         List<String> failedFiles = new ArrayList<>();
@@ -194,15 +193,12 @@ public class ServerFiles {
         }
     }
 
-    public void uploadToClient(HttpServletResponse response,String fileName,String fileType) throws IOException {
+    public void uploadToClient(OutputStream out,String fileName,String fileType) throws IOException {
         String pathname = this.windowsPath + fileName;
         File tst = new File(pathname);
         if (Files.exists(tst.toPath()) && tst.length() > 0) {
-            response.setContentType(fileType);
-            response.setHeader("Content-disposition", "attachment; filename=" + tst.getName());
             MultipartFile mFile = new MockMultipartFile(fileName, new FileInputStream(tst));
-            try (OutputStream out = response.getOutputStream();
-                 InputStream fis = mFile.getInputStream()) {
+            try (InputStream fis = mFile.getInputStream()) {
                 int count = 0;
                 while ((count = fis.read()) != -1) {
                     out.write(count);

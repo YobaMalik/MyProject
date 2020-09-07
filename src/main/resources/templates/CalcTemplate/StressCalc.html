@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Расчеты на прочность </title>
+    <style type="text/css">
+
+   p {
+    font-family:  Arial;
+    font-size: 8pt;
+   }
+  </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/Script/Script.js"></script>
+</head>
+
+<br>
+
+
+<th:block th:include="/_menu"></th:block>
+
+<form action="#"  th:action="@{/asmeTension}" th:object="${specForm}" method='POST' onchange="getGrade()">
+    <table>
+        <tr>
+            <td>Select Spec:</td>
+            <td>
+                <select id="specTest" th:field="*{spec}">
+                    <option value=""> -- </option>
+                    <option th:each="key : ${mapList.getVal().keySet()}"
+                            th:value="${key}"
+                            th:utext="${key}">
+                    </option>
+                </select>
+
+                <select id="gradeTest" th:field="*{grade}">
+                </select>
+
+                <input name="amount" type="number" step="any" th:field="*{temp}">
+                <button type="submit">LUL</button>
+
+            </td>
+        </tr>
+    </table>
+</form>
+
+<form action="#" th:action="@{/test1}"  th:object="${specForm}" method='POST'>
+    <table>
+        <tr>
+            <td>Select Spec:</td>
+            <td>
+                <select  th:field="*{spec}" >
+                    <option value=""> -- </option>
+                    <option th:each="key : ${simgaRD.getGrMap().entrySet()}"
+                            th:value="${key}"
+                            th:utext="${key.getKey()}">
+                    </option>
+                </select>
+                <select >
+                    <option value=""> -- </option>
+                    <option th:each="key : ${simgaRD}"
+                            th:value="${simgaRD}"
+                            th:utext="${key}">
+                    </option>
+                </select>
+
+                <input name="amount" type="number" step="any" th:field="*{temp}">
+                <button type="submit">LUL get this POS</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+
+<form action="#" method='POST'>
+    <table border="1">
+
+        <tbody>
+
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        <!-- pipeCalc-->
+        <tr>
+            <th colspan="2">Расчет труб</th>
+        </tr>
+        <tr>
+            <td>
+                <div class="PastorLul">
+                <b>Расчетное давление р = </b>
+                </div>
+            </td>
+            <td>
+                <input id="pressPipe" type="number" size="3" >
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетная температура T = </b>
+                </div>
+            </td>
+            <td>
+                <input id="desTempPipe" type="number" size="3">
+                ºС
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Допускаемое напряжение G = </b>
+                </div>
+            </td>
+            <td>
+                <input id="stressPipe" type="number" size="3">
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Наружный диаметр = </b>
+                </div>
+            </td>
+            <td>
+                <input id="outDiamPipe"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина = </b>
+                </div>
+            </td>
+            <td>
+                <input id="thicknessPipe"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+
+            <td colspan="2"> <button type="button" onclick="testPipe()">LUL</button></td>
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="resultPressPipe" class="PastorLul">
+                    Безделье
+                </div>
+                <div id="resultThickPipe" class="PastorLul">
+                    это игрушка дьявола
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</form>
+
+<form action="#" method='POST'>
+    <table border="1">
+
+        <tbody>
+
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        <!-- pipeCalc-->
+        <tr>
+            <th colspan="2">Расчет отводов</th>
+        </tr>
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетное давление р = </b>
+                </div>
+            </td>
+            <td>
+                <input id="pressElbow" type="number" size="3" >
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетная температура T = </b>
+                </div>
+            </td>
+            <td>
+                <input id="desTempElbow" type="number" size="3">
+                ºС
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Допускаемое напряжение G = </b>
+                </div>
+            </td>
+            <td>
+                <input id="stressElbow" type="number" size="3">
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Наружный диаметр = </b>
+                </div>
+            </td>
+            <td>
+                <input id="outDiamElbow"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина = </b>
+                </div>
+            </td>
+            <td>
+                <input id="thicknessElbow"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Радиус (по умолчанию R=1.5*D)</b>
+                </div>
+            </td>
+            <td>
+                <input id="radiusElbow"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Тип отвода</b>
+                </div>
+            </td>
+            <td>
+                <select id="elbowType">
+                    <option value="Гнутый">Гнутый<option>
+                    <option value="Штампосварной со швом на плоскости кривизны отвода">Штампосварной со швом на плоскости кривизны отвода</option>
+                    <option value="Штампосварной со швом на нейтральной линией">Штампосварной со швом на нейтральной линией</option>
+                    <option value="Cекторный">Cекторный</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+
+            <td colspan="2"> <button type="button" onclick="testElbow()">LUL</button></td>
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="resultPressElbow" class="PastorLul">
+                    Безделье
+                </div>
+                <div id="resultThickElbow" class="PastorLul">
+                    это игрушка дьявола
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</form>
+
+
+<form action="#" method='POST'>
+    <table border="1">
+
+        <tbody>
+
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        <!-- pipeCalc-->
+        <tr>
+            <th colspan="2">Расчет переходов</th>
+        </tr>
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетное давление р = </b>
+                </div>
+            </td>
+            <td>
+                <input id="pressRed" type="number" size="3" >
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетная температура T = </b>
+                </div>
+            </td>
+            <td>
+                <input id="desTempRed" type="number" size="3">
+                ºС
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Допускаемое напряжение G = </b>
+                </div>
+            </td>
+            <td>
+                <input id="stressRed" type="number" size="3">
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Наружный диаметр со стороны большего отверстия </b>
+                </div>
+            </td>
+            <td>
+                <input id="outBDiamElbow"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина со стороны большего отверстия  </b>
+                </div>
+            </td>
+            <td>
+                <input id="outBDiam"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Наружный диаметр со стороны большего отверстия </b>
+                </div>
+            </td>
+            <td>
+                <input id="outSDiamElbow"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина со стороны большего отверстия  </b>
+                </div>
+            </td>
+            <td>
+                <input id="outSDiam"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Длина перехода</b>
+                </div>
+            </td>
+            <td>
+                <input id="lenght"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Тип перехода</b>
+                </div>
+            </td>
+            <td>
+                <select id="reducerType">
+                    <option value="1">Концентрический<option>
+                    <option value="2">Эксцентрический</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+
+            <td colspan="2"> <button type="button" onclick="testElbow()">LUL</button></td>
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="resultPressRed" class="PastorLul">
+                    Безделье
+                </div>
+                <div id="resultThickRed" class="PastorLul">
+                    это игрушка дьявола
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</form>
+
+
+<form action="#" method='POST'>
+    <table border="1">
+
+        <tbody>
+
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        <!-- pipeCalc-->
+        <tr>
+            <th colspan="2">Расчет переходов</th>
+        </tr>
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетное давление р = </b>
+                </div>
+            </td>
+            <td>
+                <input id="pressTee" type="number" size="3" >
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Расчетная температура T = </b>
+                </div>
+            </td>
+            <td>
+                <input id="desTempTee" type="number" size="3">
+                ºС
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="PastorLul">
+                    <b>Допускаемое напряжение G = </b>
+                </div>
+            </td>
+            <td>
+                <input id="stressTee" type="number" size="3">
+                МПа
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Наружный диаметр магистрали </b>
+                </div>
+            </td>
+            <td>
+                <input id="outDiamTee"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина магистрали </b>
+                </div>
+            </td>
+            <td>
+                <input id="thicknessTee"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b> Диаметр ответвтления</b>
+                </div>
+            </td>
+            <td>
+                <input id="branchDiam"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <div  class="PastorLul">
+                    <b>Толщина ответвтления </b>
+                </div>
+            </td>
+            <td>
+                <input id="branchThickness"  type="number" size="3" >
+                мм
+            </td>
+        </tr>
+
+        <tr>
+
+            <td colspan="2"> <button type="button" onclick="testTee()">LUL</button></td>
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="resultPressTeem" class="PastorLul">
+                    Безделье
+                </div>
+                <div id="resultThickTeem" class="PastorLul">
+                    это игрушка дьявола
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="resultPressTee" class="PastorLul">
+                    Безделье
+                </div>
+                <div id="resultThickTee" class="PastorLul">
+                    это игрушка дьявола но для ответвления
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</form>
+
+<div id="root1"></div>
+
+<br>
+PastorLul
+
+<div id="TPTC"></div>
+<script src="/generated/app-bundle.js"></script>
+<button type="button" onclick="testTPTC()">LUL</button>
+<div id="TPTCresult"></div>
+
+
+
+</body>
+
+
+</html>

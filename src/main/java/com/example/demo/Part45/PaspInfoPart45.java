@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.example.demo.Interface.ConvertString;
 import com.example.demo.Interface.Rows;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -11,7 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-public class PaspInfoPart45 implements GetInfoPart2,ConvertString{
+public class PaspInfoPart45 implements GetInfoPart2, ConvertString {
 	private int nameElem;
 	private int eThikness;
 	private int eSteel;

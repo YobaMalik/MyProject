@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SpecGrade</title>
+</head>
+
+<body>
+<th:block th:include="/_menu"></th:block>
+
+<form   th:object="${outTension}" >
+    <table>
+        <p th:text="'Tension:' + ${outTension.getOutTensiton()}" />
+    </table>
+</form>
+
+</body>
+</html>

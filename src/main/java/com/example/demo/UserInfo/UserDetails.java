@@ -55,6 +55,7 @@ public class UserDetails implements UserDetailsService {
             while (set.next()) {
                 if(username.equals(set.getString("name"))) user=new User(username,set.getString("password"),set.getString("role").toUpperCase());
             }
+
             st.close();
             if (username.equalsIgnoreCase("admin")) {
                 user= new User(username, "admin123", "ADMIN");

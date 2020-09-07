@@ -24,7 +24,6 @@ public class CreateOBRE implements GetTableNumber, ResultDocs {
             String templatePath="C:\\Users\\Yoba\\Desktop\\sv-va\\1.docx";
             FileInputStream oTemplate=new FileInputStream(new File(templatePath));
             XWPFDocument wDoc=new XWPFDocument(oTemplate);
-
             OBREapplication newOBRE=new OBREapplication();
 
         for (Map.Entry<String, ByteArrayOutputStream> ent:fileArray.entrySet()){

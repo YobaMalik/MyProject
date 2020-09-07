@@ -1,0 +1,20 @@
+
+.Table-header
+{
+    background-color: #ccc;
+    color: blue;
+    padding: 10px;
+    text-align: left;
+}
+
+
+.GeorgeMichael-Row {
+    background-color: plum;
+    padding: 10px;
+}
+
+.Other-Row {
+    background-color: greenyellow;
+    padding: 10px;
+}
+

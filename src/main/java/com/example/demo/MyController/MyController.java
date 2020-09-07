@@ -1,18 +1,17 @@
 package com.example.demo.MyController;
 import com.example.demo.Form.Form;
-import com.example.demo.Form.UserForm;
+import com.example.demo.Form.TPTCForm;
 import com.example.demo.OBRE.CreateOBRE;
 import com.example.demo.Part45.GetInfoPart45;
 import com.example.demo.PaspAddDoc.GetInfoFSVOM;
 import com.example.demo.Pasport.GetInfoPasp;
 import com.example.demo.ServerFiles;
+import com.example.demo.TestPressure.Abstract.ModelTestPressure;
 import com.example.demo.WordReplacePackage.CreateDocsFromTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,13 +40,30 @@ public class MyController {
     private HttpSession httpSession;
 
 
-    @RequestMapping(value = "/")
-    public String homePage(HttpSession session, Principal principal) {
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public String homePage(HttpSession session, Principal principal,Model model) throws IOException {
       String name = principal.getName();
-      System.out.println(name);
+     // System.out.println(name);
+        model.addAttribute("PressureInfoTest",new ModelTestPressure());
+        model.addAttribute("TPTC",new TPTCForm());
       return "index";
     }
 
+
+    @PostMapping(value="/tptc")
+    public double testTPTC( TPTCForm form){
+
+        return 1;
+    }
+
+
+
+   /*
+    @RequestMapping(value = "/uploadMultiFile", method = RequestMethod.POST)
+    public String uploadMultiFileHandlerPOST(HttpServletRequest request, Model model,@ModelAttribute("form") Form form) {
+        return files.doUpload(request, model, form,this.fileArray);
+    }
+    */
     @RequestMapping(value = "/up", method = RequestMethod.GET)
     public String test123(HttpServletRequest request) throws IOException {
         System.out.println(new DataInputStream(request.getInputStream()).readUTF());
@@ -65,7 +81,9 @@ public class MyController {
 
     @RequestMapping(value = "/wtfGet", method = RequestMethod.GET)
     public void wtf(HttpServletResponse response) throws IOException {
-        this.files.uploadToClient(response,"WordTemplate.zip","application/zip");
+        response.setContentType("application/zip");
+        response.setHeader("Content-disposition", "attachment; filename=" + "WordTemplate.zip");
+        this.files.uploadToClient(response.getOutputStream(),"WordTemplate.zip","application/zip");
      //   return "calcTime";
     }
 
@@ -113,7 +131,9 @@ public class MyController {
 
     @RequestMapping(value = "/GetSom", method = RequestMethod.GET)
     public void getSom (HttpServletResponse response) throws IOException{
-        files.uploadToClient(response,"zipSomReposrt.zip","application/zip");
+        response.setContentType("application/zip");
+        response.setHeader("Content-disposition", "attachment; filename=" + "zipSomReposrt.zip");
+        files.uploadToClient(response.getOutputStream(),"zipSomReposrt.zip","application/zip");
     }
 
     @RequestMapping(value = "/clearArray", method = RequestMethod.GET)
@@ -135,7 +155,9 @@ public class MyController {
 
     @RequestMapping(value = "/getStr", method = RequestMethod.GET)
     public void getStr (HttpServletResponse response) throws IOException{
-        files.uploadToClient(response,"MaterialInfo.zip","application/zip");
+        response.setContentType("application/zip");
+        response.setHeader("Content-disposition", "attachment; filename=" + "MaterialInfo.zip");
+        files.uploadToClient(response.getOutputStream(),"MaterialInfo.zip","application/zip");
     }
     @RequestMapping(value = "/turnoffthemachine", method = RequestMethod.GET)
     public void offserver(HttpServletResponse response) throws IOException {
@@ -152,20 +174,25 @@ public class MyController {
 
     @RequestMapping (value="/downloadresult",method=RequestMethod.GET)
     public void getFile( HttpServletResponse response) throws IOException {
-
-        files.uploadToClient(response,"ResultTable.xlsx","application/vnd.ms-excel");
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition", "attachment; filename=" + "ResultTable.xlsx");
+        files.uploadToClient(response.getOutputStream(),"ResultTable.xlsx","application/vnd.ms-excel");
       //  files.upploadResultPaspInfo(response);
     }
 
     @RequestMapping (value="/downloadOBRE",method=RequestMethod.GET)
     public void oBRE( HttpServletResponse response) throws IOException {
 //        files.uploadOBREresult(response);
-        files.uploadToClient(response, "Template.docx","application/msword");
+        response.setContentType("application/msword");
+        response.setHeader("Content-disposition", "attachment; filename=" + "Template.docx");
+        files.uploadToClient(response.getOutputStream(), "Template.docx","application/msword");
     }
 
     @RequestMapping(value = "/uploadMultiFile", method = RequestMethod.POST)
     public String uploadMultiFileHandlerPOST(HttpServletRequest request, Model model,@ModelAttribute("form") Form form) {
-        return files.doUpload(request, model, form,this.fileArray);
+        return files.doUpload( model, form,this.fileArray);
     }
+
+
 }
 
