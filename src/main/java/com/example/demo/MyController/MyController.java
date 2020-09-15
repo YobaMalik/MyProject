@@ -7,8 +7,11 @@ import com.example.demo.PaspAddDoc.GetInfoFSVOM;
 import com.example.demo.Pasport.GetInfoPasp;
 import com.example.demo.ServerFiles;
 import com.example.demo.TestPressure.Abstract.ModelTestPressure;
-import com.example.demo.WordReplacePackage.CreateDocsFromTemplate;
+import com.example.demo.WordReplacePackage.CreateDocsFromTemplateI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +34,8 @@ public class MyController {
 
     @Inject ServerFiles files;
     @Inject CreateOBRE OBRE;
-    @Inject CreateDocsFromTemplate wordFiles;
+    @Inject
+    CreateDocsFromTemplateI wordFiles;
     @Inject GetInfoPasp newTable;
     @Inject GetInfoPart45 newInfoWb;
     @Inject GetInfoFSVOM newZipArchive;
@@ -42,17 +46,15 @@ public class MyController {
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String homePage(HttpSession session, Principal principal,Model model) throws IOException {
-      String name = principal.getName();
-     // System.out.println(name);
         model.addAttribute("PressureInfoTest",new ModelTestPressure());
         model.addAttribute("TPTC",new TPTCForm());
-      return "index";
+        System.out.println(principal);
+        return "index";
     }
 
 
     @PostMapping(value="/tptc")
     public double testTPTC( TPTCForm form){
-
         return 1;
     }
 
@@ -105,6 +107,7 @@ public class MyController {
     }
 
     @RequestMapping(value = "/res", method = RequestMethod.GET)
+    @Secured("ROLE_ADMIN")
     public String getResTHML(HttpServletRequest request) {
         return "downloadAllResult";
     }
@@ -166,6 +169,7 @@ public class MyController {
     }
 
     @RequestMapping(value = "/uploadMultiFile", method = RequestMethod.GET)
+    @Secured("ROLE_ADMIN")
     public String uploadMultiFileHandler(Model model) throws Exception {
         Form form = new Form();
         model.addAttribute("form", form);

@@ -7,14 +7,11 @@ public class CrossForm extends TeeForm {
 
     @Override
     public void visitor(ElementsVisitor visitor) {
-        // TODO Auto-generated method stub
         visitor.visit(this);
     }
 
     @Override
     public void chains() {
-        // TODO Auto-generated method stub
-
     }
 
     public double getLengthBetweenBranches() {

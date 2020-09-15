@@ -26,7 +26,9 @@ public class WordReplacePackage implements Callable<Void> {
     ByteArrayInputStream value;
     Map<String, ByteArrayOutputStream> resultDocs;
     XSSFWorkbook wb;
-    public WordReplacePackage(Map<String, ByteArrayOutputStream> resultDocs, ByteArrayInputStream value, Row tokenRow, Row valueRow, String fileName, XSSFWorkbook wb) throws IOException {
+    public WordReplacePackage(Map<String, ByteArrayOutputStream> resultDocs,
+                              ByteArrayInputStream value, Row tokenRow,
+                              Row valueRow, String fileName, XSSFWorkbook wb) {
 
         this.value=value;
         this.fileName=fileName;
@@ -47,14 +49,16 @@ public class WordReplacePackage implements Callable<Void> {
         return in;
     }
 
-    public void replaceTokenByValue(Map<String, ByteArrayOutputStream> resultDocs, ByteArrayInputStream value,Row tokenRow,Row valueRow, String fileName) throws IOException {
+    public void replaceTokenByValue(Map<String, ByteArrayOutputStream> resultDocs,
+                                    ByteArrayInputStream value, Row tokenRow,
+                                    Row valueRow, String fileName) {
 
         FormulaEvaluator evaluator1 =  this.wb.getCreationHelper().createFormulaEvaluator();
         try  ( XWPFDocument wDoc  = new XWPFDocument(value)){
 
-            int pageCount=wDoc.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
+            //int pageCount=wDoc.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
 
-            if (valueRow != null && wDoc != null) {
+            if (valueRow != null) {
                 for (int i = 1; i < valueRow.getLastCellNum(); i++) {
                     String str1 = null ;
 
@@ -79,11 +83,9 @@ public class WordReplacePackage implements Callable<Void> {
                     }
                     // System.out.println(str1.substring(0, 1));
                     //  System.out.println(text);
-                    Iterator<XWPFTable> tablesDocIter=wDoc.getTables().iterator();
 
-                    while(tablesDocIter.hasNext()) {
-                        XWPFTable docTable=tablesDocIter.next();
-                        new ReplaceMethods().replaceDatesInTables(docTable,str1,str2);
+                    for (XWPFTable docTable : wDoc.getTables()) {
+                        new ReplaceMethods().replaceDatesInTables(docTable, str1, str2);
                     }
 
                     //   new ReplaceDocsFooter().replaceFooterText(wDoc, str1,str2, pageCount );
@@ -91,9 +93,7 @@ public class WordReplacePackage implements Callable<Void> {
                     for (XWPFParagraph p : wDoc.getParagraphs()) {
                         List<XWPFRun> r = p.getRuns();
 
-                        Iterator<XWPFRun> iterRuns=r.iterator();
-                        while(iterRuns.hasNext()){
-                            XWPFRun e=iterRuns.next();
+                        for (XWPFRun e : r) {
                             String text = e.getText(0);
 
                             if (text != null && text.contains(str1)) {
@@ -108,7 +108,6 @@ public class WordReplacePackage implements Callable<Void> {
 
             try {
                 ByteArrayOutputStream out1=new ByteArrayOutputStream();
-                assert wDoc != null;
                 wDoc.write(out1);
                 resultDocs.putIfAbsent(fileName + ".docx", out1);
             } catch (IOException e) {
@@ -138,7 +137,7 @@ public class WordReplacePackage implements Callable<Void> {
     }
 
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         this.replaceTokenByValue(this.resultDocs,this.value,this.tokenRow,this.valueRow,this.fileName);
         return null;
     }

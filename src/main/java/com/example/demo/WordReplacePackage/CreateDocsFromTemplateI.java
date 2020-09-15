@@ -1,22 +1,26 @@
 package com.example.demo.WordReplacePackage;
 
-import com.example.demo.Interface.ResultDocs;
+import com.example.demo.Interface.IResultDocs;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
-public class CreateDocsFromTemplate implements ResultDocs  {
+public class CreateDocsFromTemplateI implements IResultDocs {
 
     ExecutorService newPool ;
     private InputStream excelFile ;
     private Map<String, Row> tokenMap = new HashMap<>();
-    private Map<String, ByteArrayOutputStream> result = new ConcurrentHashMap<>();
     private List<String> fileNameList=new ArrayList<>();
     private Map<String, ByteArrayOutputStream> template=new HashMap<>();
     private XSSFWorkbook wb;
@@ -40,37 +44,34 @@ public class CreateDocsFromTemplate implements ResultDocs  {
     }
 
 
-    public  void getTemplateStream(Map<String, ByteArrayOutputStream> fileInput) throws IOException {
+    public  void getTemplateStream(Map<String, ByteArrayOutputStream> fileInput) {
 
-        Iterator<Map.Entry<String, ByteArrayOutputStream>> iter = fileInput.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<String, ByteArrayOutputStream> entry=iter.next();
+        for (Map.Entry<String, ByteArrayOutputStream> entry : fileInput.entrySet()) {
             if (entry.getKey().contains(".docx") && entry.getKey().contains("multi")) {
-                template.putIfAbsent("multi",entry.getValue());
+                template.putIfAbsent("multi", entry.getValue());
             }
             if (entry.getKey().contains(".docx") && !entry.getKey().contains("multi")) {
-                template.putIfAbsent("single",entry.getValue());
+                template.putIfAbsent("single", entry.getValue());
             }
         }
     }
 
-    public void invokeTaskArrayList(Map<String, ByteArrayOutputStream> resultList) throws IOException {
+    public void invokeTaskArrayList(Map<String, ByteArrayOutputStream> resultList) {
         List<WordReplacePackage> taskList=new ArrayList<>();
         Row tokenRow=this.tokenMap.get("Токены");
 
-        Iterator<Map.Entry<String, Row>> iter=this.tokenMap.entrySet().iterator();
-        while(iter.hasNext()) {
-            Map.Entry<String, Row> entry=iter.next();
-
-            if(entry.getKey().compareTo("Токены")!=0) {
+        for (Map.Entry<String, Row> entry : this.tokenMap.entrySet()) {
+            if (entry.getKey().compareTo("Токены") != 0) {
                 Row valueRow = entry.getValue();
                 int fileCount = this.rowsNumb(entry.getKey());
                 try {
 
-                    ByteArrayOutputStream out=(fileCount <= 1 && fileCount > 0 ? this.template.get("single") : this.template.get("multi"));
+                    ByteArrayOutputStream out = (fileCount == 1 ? this.template.get("single") :
+                            this.template.get("multi"));
                     System.out.println(fileCount);
-                    taskList.add(new WordReplacePackage(resultList, new ByteArrayInputStream(out.toByteArray()), tokenRow, valueRow, entry.getKey(), this.wb));
+                    taskList.add(new WordReplacePackage(resultList,
+                            new ByteArrayInputStream(out.toByteArray()),
+                            tokenRow, valueRow, entry.getKey(), this.wb));
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -90,8 +91,7 @@ public class CreateDocsFromTemplate implements ResultDocs  {
     }
 
     private int rowsNumb(String value){
-        int count= (int) this.fileNameList.stream().filter(e -> e.compareTo(value) == 0).count();
-        return count;
+        return (int) this.fileNameList.stream().filter(e -> e.compareTo(value) == 0).count();
     }
 
     private ByteArrayOutputStream copyStream(InputStream value) throws IOException {

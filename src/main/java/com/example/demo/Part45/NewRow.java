@@ -1,11 +1,11 @@
 package com.example.demo.Part45;
 
-import com.example.demo.Interface.Rows;
+import com.example.demo.Interface.IRows;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewRow<T>  implements Rows<T> {
+public class NewRow<T>  implements IRows<T> {
 
 private List<T> RowList=new ArrayList<>();
 

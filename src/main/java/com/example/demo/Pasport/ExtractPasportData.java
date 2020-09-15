@@ -1,6 +1,6 @@
 package com.example.demo.Pasport;
 
-import com.example.demo.Interface.ResultList;
+import com.example.demo.Interface.IResultList;
 import com.example.demo.Pasport.Part2.Part2;
 import com.example.demo.Pasport.Part3.Part3;
 import com.example.demo.Pasport.Part4.Part4;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Queue;
 
 
-public class ExtractPasportData implements ResultList {
+public class ExtractPasportData implements IResultList {
 
     Part2 part2=new Part2();
     Part3 part3=new Part3();

@@ -4,10 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public interface AddMethods {
     default boolean checkFNIP(Workbook excPasp) {
-        if (excPasp.getNumberOfSheets() < 10) {
-            return true;
-        }
-        return false;
+        return excPasp.getNumberOfSheets() < 10;
     }
 
     default boolean checkNum(String str){

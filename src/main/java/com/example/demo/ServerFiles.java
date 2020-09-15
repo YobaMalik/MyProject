@@ -1,14 +1,14 @@
 package com.example.demo;
 
+
 import com.example.demo.Form.Form;
-import com.example.demo.WordReplacePackage.WordReplacePackage;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class ServerFiles {
-    //private String windowsPath = "/home/yoba/Рабочий стол/testResult/";
-    private String windowsPath="C:\\Users\\Yoba\\Desktop\\sv-va\\";
+    private final String windowsPath = "/home/yoba/Рабочий стол/testResult/";
+    //private String windowsPath="C:\\Users\\Yoba\\Desktop\\sv-va\\";
 
     public void getFilesArray(HttpServletRequest request, Map<String, ByteArrayOutputStream> fileArray) throws IOException {
         long size = 0;
@@ -33,7 +33,7 @@ public class ServerFiles {
                     byte[] bts = new byte[8192];
                     String filename = dins.readUTF();
                     long filesize = dins.readLong();
-                    int count = 0;
+                    int count;
                     ByteArrayOutputStream outA = new ByteArrayOutputStream();
                     while ((count = ins.read(bts, 0, (int) Math.min(filesize, bts.length))) != -1 && filesize > 0) {
                         outA.write(bts, 0, count);
@@ -45,8 +45,7 @@ public class ServerFiles {
         }
     }
 
-
-    public String doUpload( Model model, Form form, Map<String, ByteArrayOutputStream> fileArray) {
+    public String doUpload(Model model, Form form, Map<String, ByteArrayOutputStream> fileArray) {
         MultipartFile[] fileDatas = form.getFileDatas();
         List<String> uploadedFiles = new ArrayList<>();
         List<String> failedFiles = new ArrayList<>();
@@ -75,11 +74,6 @@ public class ServerFiles {
         return "uploadResult";
     }
 
-
-
-
-
-
     public void testZu(Map<String, ByteArrayOutputStream> res) throws IOException {
         String pathname = this.windowsPath + "zp2.zip";
         try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(pathname))) {
@@ -88,7 +82,7 @@ public class ServerFiles {
                 try {
                     zip.putNextEntry(zEntry);
                     ByteArrayInputStream iBts = new ByteArrayInputStream(z.toByteArray());
-                    int count = 0;
+                    int count;
                     byte[] bts = new byte[8192];
                     while ((count = iBts.read(bts)) != -1) {
                         zip.write(bts, 0, count);
@@ -111,7 +105,7 @@ public class ServerFiles {
             MultipartFile mFile = new MockMultipartFile("zp2.zip", new FileInputStream(tst));
             try (OutputStream out = response.getOutputStream();
                  InputStream fis = mFile.getInputStream()) {
-                int count = 0;
+                int count;
                 while ((count = fis.read()) != -1) {
                     out.write(count);
                 }
@@ -121,13 +115,12 @@ public class ServerFiles {
         }
     }
 
-
     public void uploadResultFile(Map<String, ByteArrayOutputStream> resultFiles, String fileName) {
 
 
             try (OutputStream out = new FileOutputStream(this.windowsPath+fileName);
                  InputStream fis = new ByteArrayInputStream(resultFiles.get(fileName).toByteArray())) {
-                int count = 0;
+                int count;
                 while ((count = fis.read()) != -1) {
                     out.write(count);
                 }
@@ -136,13 +129,11 @@ public class ServerFiles {
             }
         }
 
-
-
     public void uploadResultDocsZip(HttpServletResponse response, Map<String, ByteArrayOutputStream> resultFiles, String fileNameResult, String fileType) throws IOException {
 
        try(
         OutputStream responseOutStream =response.getOutputStream();
-        ZipOutputStream zip = new ZipOutputStream(responseOutStream);) {
+        ZipOutputStream zip = new ZipOutputStream(responseOutStream)) {
            response.setContentType(fileType);
            response.setHeader("Content-disposition", "attachment; filename=" + fileNameResult);
 
@@ -152,7 +143,7 @@ public class ServerFiles {
                    try {
                        zip.putNextEntry(zEntry);
                        ByteArrayInputStream iBts = new ByteArrayInputStream(z.toByteArray());
-                       int count = 0;
+                       int count;
                        byte[] bts = new byte[8192];
                        while ((count = iBts.read(bts)) != -1) {
                            zip.write(bts, 0, count);
@@ -179,7 +170,7 @@ public class ServerFiles {
                 try {
                     zip.putNextEntry(zEntry);
                     ByteArrayInputStream iBts = new ByteArrayInputStream(z.toByteArray());
-                    int count = 0;
+                    int count;
                     byte[] bts = new byte[8192];
                     while ((count = iBts.read(bts)) != -1) {
                         zip.write(bts, 0, count);
@@ -199,7 +190,7 @@ public class ServerFiles {
         if (Files.exists(tst.toPath()) && tst.length() > 0) {
             MultipartFile mFile = new MockMultipartFile(fileName, new FileInputStream(tst));
             try (InputStream fis = mFile.getInputStream()) {
-                int count = 0;
+                int count;
                 while ((count = fis.read()) != -1) {
                     out.write(count);
                 }

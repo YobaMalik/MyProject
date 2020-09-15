@@ -1,6 +1,6 @@
 package com.example.demo.Part45;
 
-import com.example.demo.Interface.Rows;
+import com.example.demo.Interface.IRows;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -10,12 +10,12 @@ import java.util.List;
 
 public class SplitResultInfo implements FillWorkbookSheet {
 
-    private HashMap<String, List<Rows<String>>> taskList = new HashMap<>();
+    private HashMap<String, List<IRows<String>>> taskList = new HashMap<>();
     private Workbook wb = new XSSFWorkbook();
     private CellStyle style;
 
 
-    public SplitResultInfo(Workbook wb, List<Rows<String>> resultList) {
+    public SplitResultInfo(Workbook wb, List<IRows<String>> resultList) {
         this.wb = wb;
         this.style = wb.createCellStyle();
         this.style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -24,12 +24,12 @@ public class SplitResultInfo implements FillWorkbookSheet {
         this.splitInfo(resultList);
     }
 
-    public void splitInfo(List<Rows<String>> resultList) {
-        List<Rows<String>> pipes = new ArrayList<>();
-        List<Rows<String>> elbows = new ArrayList<>();
-        List<Rows<String>> tees = new ArrayList<>();
-        List<Rows<String>> reducers = new ArrayList<>();
-        List<Rows<String>> blindFl = new ArrayList<>();
+    public void splitInfo(List<IRows<String>> resultList) {
+        List<IRows<String>> pipes = new ArrayList<>();
+        List<IRows<String>> elbows = new ArrayList<>();
+        List<IRows<String>> tees = new ArrayList<>();
+        List<IRows<String>> reducers = new ArrayList<>();
+        List<IRows<String>> blindFl = new ArrayList<>();
 
         resultList.forEach(e -> {
             String elemName = e.getValue(1).toLowerCase();
@@ -63,12 +63,12 @@ public class SplitResultInfo implements FillWorkbookSheet {
 
     public void fillResultDocs() {
         if (this.taskList.size() > 0) {
-            this.taskList.entrySet().forEach(e -> {
-                Sheet iSheet = wb.createSheet(e.getKey());
+            this.taskList.forEach((key, value) -> {
+                Sheet iSheet = wb.createSheet(key);
                 try {
-                    String[] ara = new HeadTemplateClass().getHeadTemplate(e.getKey());
+                    String[] ara = new HeadTemplateClass().getHeadTemplate(key);
                     //Arrays.stream(ara).forEach(System.out::println);
-                    this.FillSheet(iSheet, e.getValue(), ara, this.style);
+                    this.FillSheet(iSheet, value, ara, this.style);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

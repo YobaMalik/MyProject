@@ -106,7 +106,7 @@ public class Part4 implements AddMethods, ExtractData {
             int mergRow=200;
             int mergCol=-1;
             int lastrowDWG = 0;
-            String adString = null;
+            String adString;
 
 
             for(int j = 0; j < iSheet.getNumMergedRegions(); ++j) {
@@ -148,16 +148,16 @@ public class Part4 implements AddMethods, ExtractData {
                     adString=iSheet.getRow(i).getCell(cIndex).toString().replaceAll("\n", "");
                     adString=adString.replaceAll(" ",";");
                     String[] DWGlst=adString.split(";");
-                    for (int z=0;z<DWGlst.length;z++){
-                        if (DWGlst[z]!=null&& DWGlst[z].length()>2 ){
-                            ISOlist.put(DWGlst[z],DWGlst[z]);
+                    for (String s : DWGlst) {
+                        if (s != null && s.length() > 2) {
+                            ISOlist.put(s, s);
                         }
                     }
                 }
             }
 
             StringBuilder teststringbilder=new StringBuilder();
-            ISOlist.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
+            ISOlist.entrySet().stream().sorted(Map.Entry.comparingByKey())
                     .forEach(e->{
                         teststringbilder.append(e.getValue());
                         teststringbilder.append(";");

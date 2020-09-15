@@ -28,11 +28,8 @@ public interface TPTC032 {
 	    }
 	  default boolean checkfnip(Workbook excPasp) {
 	        //boolean b = false;
-	        if (excPasp.getNumberOfSheets() < 10) {
-	          return true;
-	        }
-	        return false;
-	    }
+		  return excPasp.getNumberOfSheets() < 10;
+	  }
 	 
 	  default String calcCategory(String TPTCcode, double operPress, double designtTemp, double maxdn) {
 		 int  paspCat=0;
@@ -118,7 +115,7 @@ public interface TPTC032 {
 		 }
 		 
 		 
-		 if (paspCat<4 && designtTemp>400) {
+		 if (designtTemp>400) {
 			 paspCat++;
 		 }
 		 
@@ -133,13 +130,11 @@ public interface TPTC032 {
 		 XSSFWorkbook testwb=new XSSFWorkbook(new FileInputStream(new File(filePath)));
 	     XSSFSheet shit=testwb.getSheet(eList);
 	     int lastcolumn=0;
-	     Iterator<Row> iter=shit.iterator();
-	     while (iter.hasNext()) {
-	    	 Row sRow=iter.next();
-	    	 if (sRow.getLastCellNum()>lastcolumn) {
-	    		 lastcolumn= sRow.getLastCellNum();
-	    	 }
-	     }
+			 for (Row sRow : shit) {
+				 if (sRow.getLastCellNum() > lastcolumn) {
+					 lastcolumn = sRow.getLastCellNum();
+				 }
+			 }
 	    int firstrow=shit.getRow(rowN).getFirstCellNum();
 	     for (int i=firstrow;i<shit.getRow(rowN).getLastCellNum();i++) {
 
@@ -160,14 +155,11 @@ public interface TPTC032 {
 	    testwb.close();
 		 } catch (IOException e) {
 			 e.printStackTrace();
-		 } finally {
-
 		 }
-	 }
+	  }
 	 default Number parseNumb(String numb) throws ParseException {
 		 NumberFormat format=NumberFormat.getInstance(Locale.FRANCE);
-		 Number number=format.parse(numb);
-		return number;
+		 return format.parse(numb);
 	 }
 	 
 }

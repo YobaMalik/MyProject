@@ -1,5 +1,6 @@
 package com.example.demo.UserInfo;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -7,21 +8,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.*;
 
+
 public class UserDetails implements UserDetailsService {
-    private  String URL = "jdbc:postgresql://192.168.1.24:5432/postgres";
-    private  String User = "postgres";
-    private String pass = "wtfmen";
+
+    @Value("${spring.datasource.url}")
+    private String URL ;
+
+    @Value("${spring.datasource.username}")
+    private String User ;
+
+    @Value("${spring.datasource.password}")
+    private String pass ;
     Connection con ;
 
-    public UserDetails() throws SQLException {
-     //   con = DriverManager.getConnection(URL, User, pass);
-    }
 
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-
-        User user = this.findUserbyUername(username);
+        User user = this.findUserbyUername(username,"");
         UserBuilder builder = null;
         if (user != null) {
             builder = org.springframework.security.core.userdetails.User.withUsername(username);
@@ -45,15 +49,21 @@ public class UserDetails implements UserDetailsService {
         return null;
     }
 
-    private User findUserbyUername(String username,String z) {
+    private User findUserbyUername(String username,String z)  {
+
+
         User user = null;
         try {
+            con = DriverManager.getConnection(URL, User, pass);
             Statement st = con.createStatement();
             String dbRequest = "SELECT name, password, role FROM ACCAUNT WHERE name=name";
             ResultSet set = st.executeQuery(dbRequest);
 
             while (set.next()) {
-                if(username.equals(set.getString("name"))) user=new User(username,set.getString("password"),set.getString("role").toUpperCase());
+                if(username.equals(set.getString("name"))) user=
+                        new User(username,set.getString("password"),
+                                set.getString("role").toUpperCase());
+
             }
 
             st.close();
@@ -64,10 +74,13 @@ public class UserDetails implements UserDetailsService {
             if (username.equalsIgnoreCase("user")) {
                 user= new User(username, "password1234", "USER");
             }
+            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return user;
-    }
 }
+}
+
+

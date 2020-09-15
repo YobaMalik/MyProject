@@ -61,9 +61,7 @@ public class ReplaceMethods {
             for (XWPFParagraph p : footer.getParagraphs()) {
                 List<XWPFRun> r = p.getRuns();
 
-                Iterator<XWPFRun> iterRuns = r.iterator();
-                while (iterRuns.hasNext()) {
-                    XWPFRun e = iterRuns.next();
+                for (XWPFRun e : r) {
                     String text = e.getText(0);
                     if (text != null && text.contains(token)) {
                         text = text.replaceAll(token, value);
@@ -80,23 +78,21 @@ public class ReplaceMethods {
                 z.getTableCells().forEach(jCell->{
                     StringBuffer text=new StringBuffer();
 
-                    Iterator<XWPFParagraph> parIter=jCell.getParagraphs().iterator();
-                    while(parIter.hasNext()) {
-                        XWPFParagraph b=parIter.next();
-
-                        Iterator<XWPFRun> runIter=b.getRuns().iterator();
-                        while(runIter.hasNext()){
+                    for (XWPFParagraph b : jCell.getParagraphs()) {
+                        Iterator<XWPFRun> runIter = b.getRuns().iterator();
+                        while (runIter.hasNext()) {
                             try {
 
                                 XWPFRun n = runIter.next();
                                 text.append(n.getText(0));
-                            } catch(Exception ez){
+                            } catch (Exception ez) {
+                                ez.printStackTrace();
                             }
                         }
                     }
 
                     String res= text.toString();
-                    if (res != null && res.contains(token)) {
+                    if (res.contains(token)) {
                         XWPFParagraph par=jCell.getParagraphArray(0);
                         String inStyle=par.getStyle();
 
@@ -104,16 +100,14 @@ public class ReplaceMethods {
                         CTP newCTP=CTP.Factory.newInstance();
                         newCTP.setPPr(cellCTP);
 
-                        jCell.getCTTc().setPArray(new CTP[]{newCTP});;
+                        jCell.getCTTc().setPArray(new CTP[]{newCTP});
 
 
                         res = res.replaceAll(token, value);
                         jCell.setText(res);
                         jCell.getParagraphArray(0).setStyle(inStyle);
                     }
-                    jCell.getTables().forEach(tbl->{
-                        this.replaceDatesInTables(tbl, token, value);
-                    });
+                    jCell.getTables().forEach(tbl-> this.replaceDatesInTables(tbl, token, value));
                 });
             });
         }

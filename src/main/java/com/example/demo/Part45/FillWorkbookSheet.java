@@ -1,12 +1,10 @@
 package com.example.demo.Part45;
 
-
-import com.example.demo.Interface.Rows;
+import com.example.demo.Interface.IRows;
 import org.apache.poi.ss.usermodel.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public interface FillWorkbookSheet {
@@ -18,11 +16,9 @@ public interface FillWorkbookSheet {
         outDiam=outDiam.replace("/n","");
         outDiam=outDiam.replace("/","-");
         String[] splitDD=outDiam.split("-");
-        for (int i=0;i<splitDD.length;i++) {
-            String[] arr=splitDD[i].split("x");
-            for (int j=0;j<arr.length;j++) {
-                elemSize.add(arr[j]);
-            }
+        for (String s : splitDD) {
+            String[] arr = s.split("x");
+            elemSize.addAll(Arrays.asList(arr));
         }
         return elemSize;
     }
@@ -45,7 +41,7 @@ public interface FillWorkbookSheet {
         return rejThick;
     }
 
-    default void FillSheet(Sheet iSheet, List<Rows<String>> resultList, String[] head, CellStyle style) throws FileNotFoundException, IOException {
+    default void FillSheet(Sheet iSheet, List<IRows<String>> resultList, String[] head, CellStyle style)  {
 
         int cellIndex=iSheet.getSheetName().compareTo("отводы")==0||iSheet.getSheetName().compareTo("трубы")==0?9:11;
         int lastFilledCell=Integer.parseInt(head[head.length-1]);
@@ -63,7 +59,6 @@ public interface FillWorkbookSheet {
             Row row=iSheet.createRow(i+1);
             String outD = null;
             String outD1 = null;
-            String eThickness = null;
             for(int j=0;j<resultList.get(i).getSize();j++) {
                 row.createCell(j).setCellValue(resultList.get(i).getValue(j));
 
@@ -75,13 +70,12 @@ public interface FillWorkbookSheet {
                 for (int j=0;j<splitList.size();j++) {
                     row.createCell(j+7).setCellValue(splitList.get(j));
                     outD=splitList.get(0);
-                    eThickness=splitList.get(1);
                     outD1=splitList.size()>2?splitList.get(2):null;
                 }
                 if(outD1!=null&& this.checkParse(outD)) {
                     row.createCell(cellIndex).setCellValue(this.getRejThick(outD.replace(",", ".")));
 
-                    if (outD1 != null) row.createCell(12).setCellValue(this.getRejThick(outD1.replace(",", ".")));
+                    row.createCell(12).setCellValue(this.getRejThick(outD1.replace(",", ".")));
 
                     if (row.getCell(1).toString().toLowerCase().contains("перех") && !row.getCell(1).toString().toLowerCase().contains("тройн")) {
                         //  row.createCell(13).setCellValue(new NewRow<String>().getEndToEndSizeASME169(outD.replace(",",".")));

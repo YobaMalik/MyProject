@@ -2,10 +2,9 @@ package com.example.demo.Part45;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.example.demo.Interface.ConvertString;
-import com.example.demo.Interface.Rows;
+import com.example.demo.Interface.IRows;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -74,7 +73,7 @@ public class PaspInfoPart45 implements GetInfoPart2, ConvertString {
 		}
 	}
 
-	public void FillTable(List<Rows<String>> resultList,String... paspPart) {
+	public void FillTable(List<IRows<String>> resultList, String... paspPart) {
 		this.paspPart=paspPart;
 		for(int z=0;z<this.paspPart.length;z++) {
 			this.GetInfoPart51(this.paspPart[z]);
@@ -85,7 +84,7 @@ public class PaspInfoPart45 implements GetInfoPart2, ConvertString {
 					if (sht.getRow(i) != null &&
 							sht.getRow(i).getCell(this.nameElem) != null &&
 							sht.getRow(i).getCell(this.nameElem).getCellType() != CellType.BLANK) {
-						Rows<String> row = new NewRow<>();
+						IRows<String> row = new NewRow<>();
 						row.addValue(0, this.fileName);
 						for (int j = 0; j < mass.length; j++) {
 							String str = sht.getRow(i).getCell(mass[j]).toString();

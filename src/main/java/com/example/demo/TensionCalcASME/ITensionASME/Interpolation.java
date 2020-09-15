@@ -1,4 +1,4 @@
-package com.example.demo.TensionCalcASME;
+package com.example.demo.TensionCalcASME.ITensionASME;
 
 public interface Interpolation {
     default double interpolation(double t1,double t2,double ft1, double ft2, double tn){
@@ -8,5 +8,4 @@ public interface Interpolation {
         value=tn*a+b;
         return value;
     }
-
 }

@@ -2,7 +2,6 @@ package com.example.demo.WordReplacePackage;
 
 import org.apache.poi.ss.usermodel.*;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +15,13 @@ public class Token {
             if(tokenMap.containsKey(iSheet.getRow(i).getCell(0).toString())) {
 
                 Row existRow=tokenMap.get(iSheet.getRow(i).getCell(0).toString());
-                Row newRow = existRow;
 
-                int minCellIndex=iSheet.getRow(i).getLastCellNum()<existRow.getLastCellNum()?iSheet.getRow(i).getLastCellNum():existRow.getLastCellNum();
+                int minCellIndex=iSheet.getRow(i).getLastCellNum()<
+                        existRow.getLastCellNum()?iSheet.getRow(i).getLastCellNum():
+                        existRow.getLastCellNum();
 
                 for (int j=0;j<iSheet.getRow(i).getLastCellNum();j++) {
-                    String newValue="";
+                    String newValue;
                     String valInExtistRow="";
                     String addValue="";
 
@@ -55,7 +55,7 @@ public class Token {
 
                     if (!valInExtistRow.contains(addValue)) newValue=valInExtistRow+"; "+addValue;
 
-                    newRow.createCell(j).setCellValue(newValue);
+                    existRow.createCell(j).setCellValue(newValue);
                 }
             }else {
                 tokenMap.put(iSheet.getRow(i).getCell(0).toString(),iSheet.getRow(i));

@@ -78,8 +78,8 @@ public String GetParagraphText(XWPFTableCell cell){
             if(cellV!=null && aStr!=null && cellV.compareTo(aStr)!=0 && iTable.getRow(i).getTableCells().size()>1) {
                 cellV=aStr;
                 if ( (i-z>1)) {
-                    for(int j=0;j<args.length;j++) {
-                        this.mergecol(iTable, z, i, args[j]);
+                    for (int arg : args) {
+                        this.mergecol(iTable, z, i, arg);
                     }
                 }
                 z=i;
@@ -237,8 +237,7 @@ public String GetParagraphText(XWPFTableCell cell){
 
 
         if(this.zTable==null) {
-            XWPFTable part2Table=this.getTableIter(wDoc, 2);
-            this.zTable = part2Table;
+            this.zTable = this.getTableIter(wDoc, 2);
         }
             XWPFTable newTestTable=wDoc.createTable();
             wDoc.setTable(wDoc.getTables().size()-1,newTestTable);

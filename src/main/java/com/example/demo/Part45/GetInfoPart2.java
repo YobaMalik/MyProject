@@ -13,7 +13,6 @@ public interface GetInfoPart2 {
         String rVal=null;
         int pressFirstRow=-1;
         int tempFirstRow=-1;
-        int fColumn=-1;
         int tempRowNumb=-1;
         int tempColNumb=-1;
         int desTempRow=-1;

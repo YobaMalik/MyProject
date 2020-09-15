@@ -1,7 +1,7 @@
 package com.example.demo.Pasport;
 
 
-import com.example.demo.Interface.ResultDocs;
+import com.example.demo.Interface.IResultDocs;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,10 +17,9 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
-public class GetInfoPasp implements ResultDocs {
+public class GetInfoPasp implements IResultDocs {
 
 
     private  Queue<RowfTable<String>> allTable1=new ConcurrentLinkedQueue<>();
@@ -56,15 +55,12 @@ public class GetInfoPasp implements ResultDocs {
 
             this.resList=resultTable;
             int sheetIndexRow=1;
-            Iterator<RowfTable<String>> iter=resultTable.iterator();
-            while (iter.hasNext()){
-                RowfTable<String> n1=iter.next();
-                Row newr=sheet.createRow(sheetIndexRow);
-                for (int i=0;i<n1.getSize();i++){
-                    if (!(n1.getValue(i)==null)){
+            for (RowfTable<String> n1 : resultTable) {
+                Row newr = sheet.createRow(sheetIndexRow);
+                for (int i = 0; i < n1.getSize(); i++) {
+                    if (!(n1.getValue(i) == null)) {
                         newr.createCell(i).setCellValue(n1.getValue(i));
-                    }
-                    else {
+                    } else {
                         newr.createCell(i).setCellValue("");
                     }
                 }

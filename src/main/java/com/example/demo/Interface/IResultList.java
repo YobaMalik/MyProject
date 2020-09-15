@@ -1,5 +1,5 @@
 package com.example.demo.Interface;
 
-public interface ResultList {
+public interface IResultList {
     void defVariables();
 }

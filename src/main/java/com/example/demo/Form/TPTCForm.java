@@ -1,7 +1,5 @@
 package com.example.demo.Form;
 
-import com.example.demo.Pasport.TPTC032;
-
 public class TPTCForm  {
     private String aggrState;
     private double operPress;

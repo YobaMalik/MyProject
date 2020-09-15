@@ -3,13 +3,14 @@ package com.example.demo.TensionCalcRD.Elements;
 import com.example.demo.Form.RDForm.ElbowForm;
 import com.example.demo.Form.Abstract.PipeElementForm;
 import com.example.demo.Interface.ConvertString;
-import com.example.demo.TensionCalcASME.Interpolation;
+import com.example.demo.TensionCalcASME.ITensionASME.Interpolation;
 import com.example.demo.TensionCalcRD.AbstractClass.AbstractTensionCalc;
 
 public class ElbowCalculation extends AbstractTensionCalc implements ConvertString, Interpolation {
-    private double ki=1.5;
+    private double ki;
 
     public ElbowCalculation(ElbowForm elbowForm){
+        ki=ki(elbowForm);
         setElemThickness(super.calcThickness(elbowForm)*ki);
         setElemPressure(calcPressure(elbowForm));
     }
@@ -17,7 +18,7 @@ public class ElbowCalculation extends AbstractTensionCalc implements ConvertStri
 
     private double ki(ElbowForm elbowForm){
         double outDiam = elbowForm.getOutDiam();
-        double radius = elbowForm.getRadius();
+        double radius = elbowForm.getRadius()==0?elbowForm.getOutDiam()*1.5:elbowForm.getRadius();
         String elbowType = elbowForm.getElbowType();
         double weldRate= elbowForm.getWeldRate();
         double ki=1;
@@ -58,9 +59,9 @@ public class ElbowCalculation extends AbstractTensionCalc implements ConvertStri
 
     @Override
     protected double calcPressure(PipeElementForm elbowForm) {
-        return 2* elbowForm.getWeldRate()*(elbowForm.getThickness()-
-                elbowForm.getAddThickness()* elbowForm.getAllowableStress()/
-                        (elbowForm.getOutDiam()*ki-(elbowForm.getThickness()- elbowForm.getAddThickness())));
+        return 2* elbowForm.getWeldRate()* elbowForm.getAllowableStress()*(elbowForm.getThickness()-
+                elbowForm.getAddThickness())/
+                        (elbowForm.getOutDiam()*ki-(elbowForm.getThickness()- elbowForm.getAddThickness()));
     }
 
 }

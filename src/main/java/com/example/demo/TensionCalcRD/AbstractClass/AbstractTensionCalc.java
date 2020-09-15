@@ -1,7 +1,6 @@
 package com.example.demo.TensionCalcRD.AbstractClass;
 
 import com.example.demo.Form.Abstract.PipeElementForm;
-import com.example.demo.Interface.Visitor;
 
 public abstract class AbstractTensionCalc {
     private double elemThickness;

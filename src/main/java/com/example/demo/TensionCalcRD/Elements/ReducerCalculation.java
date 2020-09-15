@@ -8,45 +8,52 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReducerCalculation extends AbstractTensionCalc {
+    private double branchThickness;
 
     private double degree;
-    private double sThickness;
+    private double outBDiam;
+    private double outSDiam;
     private Map<String,Double> map=new HashMap<>();
 
 
     public  ReducerCalculation(ReduceForm pipeForm){
+        map.put("eBThickness", pipeForm.geteBThickness());
+        map.put("eSThickness", pipeForm.geteSThickness());
 
-        map.put("eBThickness", pipeForm.getBThickness());
-        map.put("eSThickness", pipeForm.getSThickness());
+        double reducerType= pipeForm.getReducerType().equals("Концентрический")?2:1;
         degree=Math.atan((pipeForm.getOutBDiam()- pipeForm.getOutSDiam())/
-                pipeForm.getReducerType()/pipeForm.getLenght());
+                reducerType/pipeForm.getLength());
+        outBDiam=pipeForm.getOutBDiam();
+        outSDiam=pipeForm.getOutSDiam();
 
         setElemThickness(calcThickness(pipeForm));
-        sThickness=calcThickness(pipeForm);
-
         setElemPressure(calcPressure(pipeForm));
-
     }
 
     @Override
     public double getBranchThickness() {
-        return sThickness;
+        return branchThickness;
     }
 
     @Override
     protected double calcThickness(PipeElementForm pipeForm) {
         // desPressure,  strValue,  outDiam
-        return pipeForm.getDesPress()* pipeForm.getOutDiam()/
+        branchThickness=pipeForm.getDesPress()* outSDiam/
+                (2* pipeForm.getWeldRate()* pipeForm.getAllowableStress()*Math.cos(degree)
+                        + pipeForm.getDesPress());
+
+        return pipeForm.getDesPress()* outBDiam/
                 (2* pipeForm.getWeldRate()* pipeForm.getAllowableStress()*Math.cos(degree)
                         + pipeForm.getDesPress());
     }
 
     @Override
     protected double calcPressure(PipeElementForm pipeForm) {
+
         // strValue,  outDiam,  eThickness
         return 2* pipeForm.getWeldRate()* pipeForm.getAllowableStress()*Math.cos(degree)
                 *(map.get("eSThickness")- pipeForm.getAddThickness())/
-                (pipeForm.getOutDiam()-map.get("eBThickness")+pipeForm.getAddThickness());
+                (outBDiam-map.get("eBThickness")+pipeForm.getAddThickness());
     }
 
 }

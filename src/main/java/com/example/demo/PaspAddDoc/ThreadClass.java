@@ -13,10 +13,9 @@ import java.util.concurrent.Callable;
 public class ThreadClass implements  Callable<Void>{
         private InputStream fFile;
         private String fileName;
-        private Queue<RowfTable<String>> allTable;
         Map<String, ByteArrayOutputStream> somList;
-        public   ThreadClass(String fileName, InputStream fFile, Queue<RowfTable<String>> allTable1, Map<String, ByteArrayOutputStream> somList){
-            this.allTable=allTable1;
+        public   ThreadClass(String fileName, InputStream fFile,
+                             Map<String, ByteArrayOutputStream> somList){
             this.fFile=fFile;
             this.fileName=fileName;
             this.somList=somList;
@@ -25,8 +24,8 @@ public class ThreadClass implements  Callable<Void>{
     @Override
     public Void call() throws IOException {
             PaspAddDoc newExceldDoc = new PaspAddDoc(fFile);
-            newExceldDoc.testsom("C:\\Users\\Yoba\\Desktop\\Свидетельство о монтаже №123.xlsx", this.somList);
-            //newWordDoc.testsom("/home/yoba/Рабочий стол/Свидетельство о монтаже №123.xlsx", this.somList);
+            //newExceldDoc.testsom("C:\\Users\\Yoba\\Desktop\\Свидетельство о монтаже №123.xlsx", this.somList);
+            newExceldDoc.testsom("/home/yoba/Рабочий стол/Свидетельство о монтаже №123.xlsx", this.somList);
             System.out.println(fileName +" Done" );
 
         return null;

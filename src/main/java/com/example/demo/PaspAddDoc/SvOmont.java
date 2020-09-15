@@ -5,13 +5,16 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.*;
-import java.io.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 import static org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT;
 
 public class SvOmont {
@@ -101,7 +104,7 @@ public class SvOmont {
 
             String nameandparapms=this.fluidCode+","+"\n"+"Ррасч.(МПа) = "+this.desingPress+","+"\n"+"Трасч.(°C) ="+this.desingTemp;
             iSheet.getRow(14).getCell(0).setCellValue(nameandparapms);
-            iSheet.getRow(14).setHeightInPoints(24+this.desingTemp.length()/114*12+12);
+            iSheet.getRow(14).setHeightInPoints(24+(float)this.desingTemp.length()/114*12+12);
            // System.out.println((short)(24+this.desingTemp.length()/10));
               /*
             fluid code and design pressure and temperature

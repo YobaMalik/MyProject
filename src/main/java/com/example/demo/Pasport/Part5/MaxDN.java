@@ -116,9 +116,9 @@ public class MaxDN implements AddMethods, ExtractData {
                         str = str.replaceAll("/", "x");
                         str = str.replaceAll("-", "x");
                         String[] diams = str.split("x");
-                        for (int j=0;j<diams.length;j++){
-                            if (checkNum(diams[j]) && Double.parseDouble(diams[j]) > maxDN) {
-                                maxDN = Double.parseDouble(diams[j]);
+                        for (String diam : diams) {
+                            if (checkNum(diam) && Double.parseDouble(diam) > maxDN) {
+                                maxDN = Double.parseDouble(diam);
                             }
                         }
 

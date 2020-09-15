@@ -1,6 +1,5 @@
 package com.example.demo.Pasport.InterfacePasp;
 
-
 import com.example.demo.Pasport.RowfTable;
 import java.util.Queue;
 

@@ -33,9 +33,8 @@ public class CrossCalculation extends AbstractTensionCalc {
                 *(cross.getThickness()-cross.getAddThickness()));
         double fiMin=(cross.getLengthBetweenBranches()-cross.getBranchDiam())/
                 cross.getLengthBetweenBranches();
-        double strengthReductionRate=(2*(1-fiMin)+z*fiMin)/
+        this.strengthReductionRate= (2*(1-fiMin)+z*fiMin)/
                 (2*(1+z)-(2+z)*fiMin);
-        this.strengthReductionRate=strengthReductionRate;
     }
 
 
@@ -44,14 +43,9 @@ public class CrossCalculation extends AbstractTensionCalc {
         boolean b=cross.getBranchDiam()>=100?cross.getLengthBetweenBranches()>=cross.getBranchDiam()+100:
                 cross.getLengthBetweenBranches()>=cross.getBranchDiam()+50;
         System.out.println();
-        if(b&& 2*Math.sqrt((cross.getOutDiam()-cross.getThickness())
-                *(cross.getThickness()-cross.getAddThickness()))<
-                cross.getLengthBetweenBranches()) {
-
-            return true;
-        }
-
-        return false;
+        return b && 2 * Math.sqrt((cross.getOutDiam() - cross.getThickness())
+                * (cross.getThickness() - cross.getAddThickness())) <
+                cross.getLengthBetweenBranches();
 
     }
 

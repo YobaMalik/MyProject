@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/javax.inject/javax.inject
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
+
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.15'
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.3.2.RELEASE'
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.2.RELEASE'
+
+// https://mvnrepository.com/artifact/org.apache.poi/poi
+    compile group: 'org.apache.poi', name: 'poi', version: '4.1.1'
+// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
+// https://mvnrepository.com/artifact/org.apache.poi/poi-scratchpad
+    compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '4.1.1'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.3.2.RELEASE'
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.3.2.RELEASE'
+
+// https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.19.Final'
+
+// https://mvnrepository.com/artifact/org.springframework/spring-test
+    testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.0.RELEASE'
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.3.2.RELEASE', ext: 'pom'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

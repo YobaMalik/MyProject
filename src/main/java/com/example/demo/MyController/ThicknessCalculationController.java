@@ -1,21 +1,20 @@
 package com.example.demo.MyController;
 
-import com.example.demo.Form.Abstract.PipeElementForm;
 import com.example.demo.Form.RDForm.*;
 import com.example.demo.TensionCalcRD.AbstractClass.AbstractTensionCalc;
 import com.example.demo.TensionCalcRD.AbstractClass.ElementsVisitor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ThicknessCalculationController {
+
     @PostMapping(path="/pipeStressCalc/pipe", headers = {"Content-type=application/json"})
     @ResponseBody
     public AbstractTensionCalc calcPipe(@RequestBody PipeForm elemForm){
+        System.out.println(elemForm.getDesPress());
         return new ElementsVisitor().visit(elemForm);
     }
 
@@ -39,10 +38,8 @@ public class ThicknessCalculationController {
 
     @PostMapping(path="/pipeStressCalc/reducer", headers = {"Content-type=application/json"})
     @ResponseBody
-    public AbstractTensionCalc calcReducer( @RequestBody ReduceForm elemForm){
+    public AbstractTensionCalc calcReducer(@RequestBody ReduceForm elemForm){
         return new ElementsVisitor().visit(elemForm);
     }
-
-
 
 }

@@ -5,12 +5,13 @@ import com.example.demo.Form.RDForm.TeeForm;
 import com.example.demo.TensionCalcRD.AbstractClass.AbstractTensionCalc;
 
 public class TeeCalculation extends AbstractTensionCalc {
+
     private double strengthReductionRate;
     private double branchThickness;
     private double branchDiam;
     private double branchAddThickness;
 
-    private double branchCalcTickness;
+    private double branchCalcThickness;
     private double branchPress;
 
     public  TeeCalculation (TeeForm teeForm){
@@ -21,7 +22,6 @@ public class TeeCalculation extends AbstractTensionCalc {
 
         setElemThickness(calcThickness(teeForm));
         setElemPressure(calcPressure(teeForm));
-        branchThickness=super.calcThickness(teeForm);
 
     }
 
@@ -33,9 +33,13 @@ public class TeeCalculation extends AbstractTensionCalc {
     @Override
     protected double calcThickness(PipeElementForm pipeForm) {
         //double desPressure, double strValue, double outDiam
+        branchCalcThickness=(pipeForm.getDesPress()*branchDiam)/
+                (2*pipeForm.getWeldRate()*pipeForm.getAllowableStress()+
+                        pipeForm.getDesPress());
         return (pipeForm.getDesPress()*pipeForm.getOutDiam())/
                 (2*Math.min(pipeForm.getWeldRate(),strengthReductionRate)*pipeForm.getAllowableStress()+
                         pipeForm.getDesPress());
+
     }
 
     @Override
@@ -56,4 +60,11 @@ public class TeeCalculation extends AbstractTensionCalc {
         return branchPress;
     }
 
+    public double getBranchCalcThickness() {
+        return branchCalcThickness;
+    }
+
+    public void setBranchCalcThickness(double branchCalcThickness) {
+        this.branchCalcThickness = branchCalcThickness;
+    }
 }

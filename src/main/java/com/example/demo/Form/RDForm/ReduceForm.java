@@ -8,8 +8,8 @@ public class ReduceForm extends PipeElementForm {
     private double eSThickness;
     private double outBDiam;
     private double outSDiam;
-    private double reducerType;
-    private double lenght;
+    private String reducerType;
+    private double length;
 
     @Override
     public void visitor(ElementsVisitor visitor) {
@@ -20,19 +20,19 @@ public class ReduceForm extends PipeElementForm {
     public void chains() {
 
     }
-    public double getBThickness() {
+    public double geteBThickness() {
         return eBThickness;
     }
 
-    public void setBThickness(double eBThickness) {
+    public void seteBThickness(double eBThickness) {
         this.eBThickness = eBThickness;
     }
 
-    public double getSThickness() {
+    public double geteSThickness() {
         return eSThickness;
     }
 
-    public void setSThickness(double eSThickness) {
+    public void seteSThickness(double eSThickness) {
         this.eSThickness = eSThickness;
     }
 
@@ -52,20 +52,20 @@ public class ReduceForm extends PipeElementForm {
         this.outSDiam = outSDiam;
     }
 
-    public double getReducerType() {
+    public String getReducerType() {
         return reducerType;
     }
 
     public void setReducerType(String reducerType) {
-        this.reducerType = reducerType.equals("Концентрический")?2:1;
+        this.reducerType = reducerType;
     }
 
-    public double getLenght() {
-        return lenght;
+    public double getLength() {
+        return length;
     }
 
     public void setLenght(double lenght) {
-        this.lenght = lenght;
+        this.length = lenght;
     }
 
 }
