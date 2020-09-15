@@ -13,6 +13,3 @@ public class UploadApplication  {
 	}
 }
 
-//chdir C:\Users\Yoba\IdeaProjects\Upload v18 + react\src\main\resources\static
-//npm run dev
-//npm run build
